@@ -87,6 +87,34 @@ View(esr_dat)
 
 #predator abundance data=================
 
+arrowtooth_dat <- read.csv("./data/est_arrowtooth_biomass_2020assessment_tab6-13.csv")
+View(arrowtooth_dat)
+names(arrowtooth_dat)
+colnames(arrowtooth_dat)[colnames(arrowtooth_dat) == 'Total_biomass'] <- 
+  'total_arrowtooth_biomass'
+colnames(arrowtooth_dat)[colnames(arrowtooth_dat) == 'Biomass_lower_CI'] <- 
+  'arrowtooth_biomass_lower_CI'
+colnames(arrowtooth_dat)[colnames(arrowtooth_dat) == 'Biomass_upper_CI'] <- 
+  'arrowtooth_biomass_upper_CI'
+colnames(arrowtooth_dat)[colnames(arrowtooth_dat) == 'FSB'] <- 
+  'arrowtooth_FSB'
+colnames(arrowtooth_dat)[colnames(arrowtooth_dat) == 'Lower_CI'] <- 
+  'arrowtooth_lower_CI'
+colnames(arrowtooth_dat)[colnames(arrowtooth_dat) == 'Upper_CI'] <- 
+  'arrowtooth_upper_CI'
+
+pcod_dat <- read.csv("./data/estimated_biomass_Pcod_tab2-36_2020assessment_ensbAB.csv")
+View(pcod_dat)
+names(pcod_dat)
+colnames(pcod_dat)[colnames(pcod_dat) == 'age0plus'] <- 
+  'age0plus_pcod'
+colnames(pcod_dat)[colnames(pcod_dat) == 'spawn'] <- 
+  'spawn_pcod'
+colnames(pcod_dat)[colnames(pcod_dat) == 'SB_SD'] <- 
+  'SB_SD_pcod'
+
+
+
 #joins======
 
 #join to pollock data loaded in load_explore_data.R
@@ -111,25 +139,64 @@ ggplot(mean_wF[which(mean_wF$AGE<16),], aes(YEAR, mean_annual_size_global)) +
 mean_wF_esr <- left_join(mean_wF, esr_dat, by=c("YEAR"="Year"))
 
 ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(YEAR, pelagic_forager_biomass)) +
-  geom_point() + 
-  facet_wrap(~AGE, scales="free")
+  geom_point()
 
 ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(YEAR, benthic_forager_biomass)) +
-  geom_point() + 
-  facet_wrap(~AGE, scales="free")
+  geom_point()
 
 ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(YEAR, forage_fish_biomass)) +
-  geom_point() + 
-  facet_wrap(~AGE, scales="free")
+  geom_point() 
 
 ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(YEAR, epifauna_biomass)) +
-  geom_point() + 
-  facet_wrap(~AGE, scales="free")
+  geom_point() 
 
 ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(YEAR, apex_pred_biomass)) +
+  geom_point() 
+
+ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(YEAR, euph_density)) +
+  geom_point() 
+
+ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(pelagic_forager_biomass, mean_annual_size_global, col=as.factor(YEAR))) +
   geom_point() + 
   facet_wrap(~AGE, scales="free")
 
-ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(YEAR, euph_biomass)) +
+ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(benthic_forager_biomass, mean_annual_size_global, col=as.factor(YEAR))) +
+  geom_point() + 
+  facet_wrap(~AGE, scales="free")
+
+ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(forage_fish_biomass, mean_annual_size_global, col=as.factor(YEAR))) +
+  geom_point() + 
+  facet_wrap(~AGE, scales="free")
+
+ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(epifauna_biomass, mean_annual_size_global, col=as.factor(YEAR))) +
+  geom_point() + 
+  facet_wrap(~AGE, scales="free")
+
+ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(apex_pred_biomass, mean_annual_size_global, col=as.factor(YEAR))) +
+  geom_point() + 
+  facet_wrap(~AGE, scales="free")
+
+ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(euph_density, mean_annual_size_global, col=as.factor(YEAR))) +
+  geom_point() + 
+  facet_wrap(~AGE, scales="free")
+
+#preds data join
+
+preds_dat <- left_join(arrowtooth_dat, pcod_dat, by="year")
+
+mean_all <- left_join(mean_wF_esr, preds_dat, by=c("YEAR"="year"))
+
+ggplot(mean_all[which(mean_all$AGE<16),], aes(YEAR, total_arrowtooth_biomass)) +
+  geom_point() 
+
+ggplot(mean_all[which(mean_all$AGE<16),], aes(YEAR, age0plus_pcod)) +
+  geom_point() 
+
+
+ggplot(mean_all[which(mean_all$AGE<16),], aes(total_arrowtooth_biomass, mean_annual_size_global, col=as.factor(YEAR))) +
+  geom_point() + 
+  facet_wrap(~AGE, scales="free")
+
+ggplot(mean_all[which(mean_all$AGE<16),], aes(age0plus_pcod, mean_annual_size_global, col=as.factor(YEAR))) +
   geom_point() + 
   facet_wrap(~AGE, scales="free")
