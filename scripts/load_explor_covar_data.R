@@ -246,3 +246,21 @@ ggplot(mean_all[which(mean_all$AGE<16),], aes(total_arrowtooth_biomass, mean_ann
 ggplot(mean_all[which(mean_all$AGE<16),], aes(age0plus_pcod, mean_annual_size_global, col=as.factor(YEAR))) +
   geom_point() + 
   facet_wrap(~AGE, scales="free")
+
+#join to clim data
+
+analysis_df <- left_join(mean_all, climdat, by=c("YEAR"="year"))
+
+
+#check collinearity======
+library(corrplot)
+
+#look at just covars (NOT by age)
+#this EXCLUDES F data which is only by age
+covars <- left_join(climdat, preds_dat) %>%
+  left_join(., esr_dat, by=c('year'= 'Year')) 
+
+names(covars)
+pairs(covars[,c(26, 32:33, 35:43)]) #nonclimate covars
+cormat1 <- cor(covars[,c(26, 32:33, 35:43)], use="complete.obs")
+corrplot.mixed(cormat1, upper = 'ellipse',lower='number')
