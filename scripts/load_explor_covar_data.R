@@ -261,6 +261,19 @@ covars <- left_join(climdat, preds_dat) %>%
   left_join(., esr_dat, by=c('year'= 'Year')) 
 
 names(covars)
+pairs(covars[,c(2:25)]) #climate covars
+cormat2 <- cor(covars[,c(2:25)], use="complete.obs")
+corrplot.mixed(cormat2, upper = 'ellipse',lower='number')
+#lots high, what about only those of interest?
+
+cormat3 <- cor(covars[,c(3, 41:43)], use="complete.obs")
+corrplot.mixed(cormat3, upper = 'ellipse',lower='number')
+#south.sst.amj, CPI, sea ice extent all very strongly cor (>.74)
+#NPI not cor with much
+
+#nonclim covars
 pairs(covars[,c(26, 32:33, 35:43)]) #nonclimate covars
 cormat1 <- cor(covars[,c(26, 32:33, 35:43)], use="complete.obs")
 corrplot.mixed(cormat1, upper = 'ellipse',lower='number')
+#wow some quite high correlations!
+
