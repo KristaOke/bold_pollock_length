@@ -77,11 +77,36 @@ euph_dat <- read.csv("./data/Euphs.csv", skip=4, header=TRUE, na.strings="null")
 View(euph_dat)
 colnames(euph_dat)[colnames(euph_dat) == 'Value'] <- 'euph_density'
 
+#and esr clim covas
+
+#Cold pool extent
+coldpool_dat <- read.csv("./data/ColdPool.csv", skip=4, header=TRUE, na.strings="null")
+View(coldpool_dat)
+colnames(coldpool_dat)[colnames(coldpool_dat) == 'Value'] <- 'cold_pool_extent'
+
+#Cold pool extent
+coldpool_dat <- read.csv("./data/ColdPool.csv", skip=4, header=TRUE, na.strings="null")
+View(coldpool_dat)
+colnames(coldpool_dat)[colnames(coldpool_dat) == 'Value'] <- 'cold_pool_extent'
+
+#North Pacific Index (Nov-Mar average)
+npi_dat <- read.csv("./data/NPI.csv", skip=4, header=TRUE, na.strings="null")
+View(npi_dat)
+colnames(npi_dat)[colnames(npi_dat) == 'Index'] <- 'NPI'
+
+#Sea ice extent
+seaice_dat <- read.csv("./data/IceExtent.csv", skip=4, header=TRUE, na.strings="null")
+View(seaice_dat)
+colnames(seaice_dat)[colnames(seaice_dat) == 'Index'] <- 'sea_ice_extent'
+
 esr_dat <- left_join(pel_dat, bnth_dat, by='Year') %>%
   left_join(., forg_dat, by='Year') %>%
   left_join(., epif_dat, by='Year') %>%
   left_join(., apex_dat, by='Year') %>%
-  left_join(., euph_dat, by='Year') 
+  left_join(., euph_dat, by='Year') %>%
+left_join(., coldpool_dat, by='Year') %>%
+  left_join(., npi_dat, by='Year') %>%
+  left_join(., seaice_dat, by='Year') 
 
 View(esr_dat)
 
@@ -156,6 +181,15 @@ ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(YEAR, apex_pred_biomass)) +
 ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(YEAR, euph_density)) +
   geom_point() 
 
+ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(YEAR, cold_pool_extent)) +
+  geom_point() 
+
+ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(YEAR, NPI)) +
+  geom_point() 
+
+ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(YEAR, sea_ice_extent)) +
+  geom_point() 
+
 ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(pelagic_forager_biomass, mean_annual_size_global, col=as.factor(YEAR))) +
   geom_point() + 
   facet_wrap(~AGE, scales="free")
@@ -177,6 +211,18 @@ ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(apex_pred_biomass, mean_annu
   facet_wrap(~AGE, scales="free")
 
 ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(euph_density, mean_annual_size_global, col=as.factor(YEAR))) +
+  geom_point() + 
+  facet_wrap(~AGE, scales="free")
+
+ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(cold_pool_extent, mean_annual_size_global, col=as.factor(YEAR))) +
+  geom_point() + 
+  facet_wrap(~AGE, scales="free")
+
+ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(NPI, mean_annual_size_global, col=as.factor(YEAR))) +
+  geom_point() + 
+  facet_wrap(~AGE, scales="free")
+
+ggplot(mean_wF_esr[which(mean_wF_esr$AGE<16),], aes(sea_ice_extent, mean_annual_size_global, col=as.factor(YEAR))) +
   geom_point() + 
   facet_wrap(~AGE, scales="free")
 
