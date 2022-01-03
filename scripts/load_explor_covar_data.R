@@ -276,9 +276,34 @@ ggplot(mean_all[which(mean_all$AGE<16),], aes(age0plus_pcod, mean_annual_size_gl
 
 #add in pollock data
 
-mean_all <- left_join(mean_all, polabun_dat, by=c("YEAR"="Year"))
+#mean_all <- left_join(mean_all, polabun_dat, by=c("YEAR"="Year"))
 #this joins all age abundances to each row, would it be better
 #to join by age? Would need to pivot polabun_dat long and add age
+
+pivp <- polabun_dat %>%
+  pivot_longer(!Year)
+   
+pivp$age <- NA
+pivp$age[which(pivp$name=="age1pollock_abund")] <- "1"
+pivp$age[which(pivp$name=="age2pollock_abund")] <- "2"
+pivp$age[which(pivp$name=="age3pollock_abund")] <- "3"
+pivp$age[which(pivp$name=="age4pollock_abund")] <- "4"
+pivp$age[which(pivp$name=="age5pollock_abund")] <- "5"
+pivp$age[which(pivp$name=="age6pollock_abund")] <- "6"
+pivp$age[which(pivp$name=="age7pollock_abund")] <- "7"
+pivp$age[which(pivp$name=="age8pollock_abund")] <- "8"
+pivp$age[which(pivp$name=="age9pollock_abund")] <- "9"
+pivp$age[which(pivp$name=="age10pluspollock_abund")] <- "10plus"
+pivp$age <- as.factor(pivp$age)
+            
+colnames(pivp)[colnames(pivp) == 'value'] <- 
+  'pollock_abun_bil_at_age'              
+
+pivp <- pivp[,-2]
+
+mean_all$AGE <- as.factor(as.character(mean_all$AGE))
+
+mean_all <- left_join(mean_all, pivp, by=c("YEAR"="Year", "AGE"="age"))
 
 #join to clim data
 
