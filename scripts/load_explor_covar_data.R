@@ -165,7 +165,10 @@ colnames(polabun_dat)[colnames(polabun_dat) == 'age9'] <-
 colnames(polabun_dat)[colnames(polabun_dat) == 'age10plus'] <- 
   'age10pluspollock_abund'
 
+#3-plus from 2020 assessment
 
+pol3plus_dat <- read.csv("./data/estimated_3plus_biomass_2020assessment_tab28.csv")
+View(pol3plus_dat)
 
 #joins======
 
@@ -305,6 +308,8 @@ mean_all$AGE <- as.factor(as.character(mean_all$AGE))
 
 mean_all <- left_join(mean_all, pivp, by=c("YEAR"="Year", "AGE"="age"))
 
+mean_all <- left_join(mean_all, pol3plus_dat, by=c("YEAR"="Year"))
+
 #join to clim data
 
 analysis_df <- left_join(mean_all, climdat, by=c("YEAR"="year"))
@@ -316,7 +321,9 @@ library(corrplot)
 #look at just covars (NOT by age)
 #this EXCLUDES F data which is only by age
 covars <- left_join(climdat, preds_dat) %>%
-  left_join(., esr_dat, by=c('year'= 'Year')) 
+  left_join(., esr_dat, by=c('year'= 'Year')) %>%
+  left_join(., pol3plus_dat, by=c('year'= 'Year')) 
+
 
 names(covars)
 pairs(covars[,c(2:25)]) #climate covars
@@ -328,10 +335,32 @@ cormat3 <- cor(covars[,c(3, 41:43)], use="complete.obs")
 corrplot.mixed(cormat3, upper = 'ellipse',lower='number')
 #south.sst.amj, CPI, sea ice extent all very strongly cor (>.74)
 #NPI not cor with much
+#Use SST, not CPI or sea ice
 
 #nonclim covars
-pairs(covars[,c(26, 32:33, 35:43)]) #nonclimate covars
-cormat1 <- cor(covars[,c(26, 32:33, 35:43)], use="complete.obs")
+pairs(covars[,c(26, 32:33, 35:40, 44)]) #nonclimate covars
+cormat1 <- cor(covars[,c(26, 32:33, 35:40, 44)], use="complete.obs")
 corrplot.mixed(cormat1, upper = 'ellipse',lower='number')
 #wow some quite high correlations!
 
+#drop euphs, short and cor w nearly everything
+cormat4 <- cor(covars[,c(26, 32:33, 35:39, 44)], use="complete.obs")
+corrplot.mixed(cormat4, upper = 'ellipse',lower='number')
+pairs(covars[,c(26, 32:33, 35:39, 44)])
+
+#forage fish is next shortest, are close calls still close if it is dropped?
+cormat5 <- cor(covars[,c(26, 32:33, 35:36, 38:39, 44)], use="complete.obs")
+corrplot.mixed(cormat5, upper = 'ellipse',lower='number')
+
+#drop age0plus pcod and arrowtooth, add back in clim
+cormat6 <- cor(covars[,c(3, 33, 35:36, 38:39, 44)], use="complete.obs")
+corrplot.mixed(cormat6, upper = 'ellipse',lower='number')
+
+#add forage fish back in
+cormat7 <- cor(covars[,c(3, 33, 35:39, 44)], use="complete.obs")
+corrplot.mixed(cormat7, upper = 'ellipse',lower='number')
+
+#with abund at age?
+cormat8 <- cor(analysis_df[,c(8:12, 24, 26, 30)], use="complete.obs")
+corrplot.mixed(cormat8, upper = 'ellipse',lower='number')
+#looks fine except already identified issues
