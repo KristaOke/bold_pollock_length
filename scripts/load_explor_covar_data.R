@@ -139,6 +139,33 @@ colnames(pcod_dat)[colnames(pcod_dat) == 'SB_SD'] <-
   'SB_SD_pcod'
 
 
+#pollock abundance data========
+
+polabun_dat <- read.csv("./data/estimated_billions_pollock_at_age_from_assmodel_table1-28_2021assessment.csv")
+View(polabun_dat)
+
+colnames(polabun_dat)[colnames(polabun_dat) == 'age1'] <- 
+  'age1pollock_abund'
+colnames(polabun_dat)[colnames(polabun_dat) == 'age2'] <- 
+  'age2pollock_abund'
+colnames(polabun_dat)[colnames(polabun_dat) == 'age3'] <- 
+  'age3pollock_abund'
+colnames(polabun_dat)[colnames(polabun_dat) == 'age4'] <- 
+  'age4pollock_abund'
+colnames(polabun_dat)[colnames(polabun_dat) == 'age5'] <- 
+  'age5pollock_abund'
+colnames(polabun_dat)[colnames(polabun_dat) == 'age6'] <- 
+  'age6pollock_abund'
+colnames(polabun_dat)[colnames(polabun_dat) == 'age7'] <- 
+  'age7pollock_abund'
+colnames(polabun_dat)[colnames(polabun_dat) == 'age8'] <- 
+  'age8pollock_abund'
+colnames(polabun_dat)[colnames(polabun_dat) == 'age9'] <- 
+  'age9pollock_abund'
+colnames(polabun_dat)[colnames(polabun_dat) == 'age10plus'] <- 
+  'age10pluspollock_abund'
+
+
 
 #joins======
 
@@ -246,6 +273,12 @@ ggplot(mean_all[which(mean_all$AGE<16),], aes(total_arrowtooth_biomass, mean_ann
 ggplot(mean_all[which(mean_all$AGE<16),], aes(age0plus_pcod, mean_annual_size_global, col=as.factor(YEAR))) +
   geom_point() + 
   facet_wrap(~AGE, scales="free")
+
+#add in pollock data
+
+mean_all <- left_join(mean_all, polabun_dat, by=c("YEAR"="Year"))
+#this joins all age abundances to each row, would it be better
+#to join by age? Would need to pivot polabun_dat long and add age
 
 #join to clim data
 
