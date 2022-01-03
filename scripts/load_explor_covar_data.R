@@ -364,3 +364,6 @@ corrplot.mixed(cormat7, upper = 'ellipse',lower='number')
 cormat8 <- cor(analysis_df[,c(8:12, 24, 26, 30)], use="complete.obs")
 corrplot.mixed(cormat8, upper = 'ellipse',lower='number')
 #looks fine except already identified issues
+
+wd <- getwd()
+write.csv(analysis_df, file=paste(wd,"/data/analysis_ready_data_pollock_length.csv", sep=""))
