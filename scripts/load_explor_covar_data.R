@@ -28,6 +28,26 @@ piv10_15 <- Fdat %>%
 Fdatlong <- rbind(piv1_9, piv10_15)
 Fdatlong <- na.omit(Fdatlong)
 
+#calc overall F in year-----
+
+Foverall <- Fdatlong %>% group_by(year) %>%
+  summarize(mean_annual_C=mean(C, na.rm=TRUE), mean_annual_N=mean(N, na.rm=TRUE))
+
+Foverall$mean_annual_F <- Foverall$mean_annual_C/Foverall$mean_annual_N
+
+ggplot(Foverall, aes(year, mean_annual_F)) + geom_point() + geom_line()
+
+
+#calc 3plus overall F in year-----
+
+F3plus <- Fdatlong[which(Fdatlong$age>2),] %>% group_by(year) %>%
+  summarize(mean_annual_C3plus=mean(C, na.rm=TRUE), mean_annual_N3plus=mean(N, na.rm=TRUE))
+
+F3plus$mean_annual_F3plus <- F3plus$mean_annual_C3plus/F3plus$mean_annual_N3plus
+
+ggplot(F3plus, aes(year, mean_annual_F3plus)) + geom_point() + geom_line()
+
+F3sub <- F3plus[,-c(2:3)]
 
 #climate data from previous project====
 
@@ -310,6 +330,8 @@ mean_all <- left_join(mean_all, pivp, by=c("YEAR"="Year", "AGE"="age"))
 
 mean_all <- left_join(mean_all, pol3plus_dat, by=c("YEAR"="Year"))
 
+
+
 #join to clim data
 
 analysis_df <- left_join(mean_all, climdat, by=c("YEAR"="year"))
@@ -364,6 +386,10 @@ corrplot.mixed(cormat7, upper = 'ellipse',lower='number')
 cormat8 <- cor(analysis_df[,c(8:12, 24, 26, 30)], use="complete.obs")
 corrplot.mixed(cormat8, upper = 'ellipse',lower='number')
 #looks fine except already identified issues
+
+#join with F3sub without messing up indexing above
+analysis_df <- left_join(analysis_df, F3sub, by=c("YEAR"="year"))
+
 
 wd <- getwd()
 write.csv(analysis_df, file=paste(wd,"/data/analysis_ready_data_pollock_length.csv", sep=""))
