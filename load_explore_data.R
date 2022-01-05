@@ -131,3 +131,14 @@ library(lubridate)
 datjoin$Date <- chron::dates(as.character(datjoin$TOW_DATE))
 
 datjoin$julian <- lubridate::yday(datjoin$Date)
+
+
+#join individual level data to covariate data-------
+
+analysis_dat1 <- read.csv(file=paste(wd,"/data/analysis_ready_data_pollock_length.csv", sep=""), row.names=1)
+
+indiv_analysis <- left_join(datjoin, analysis_dat1)
+View(indiv_analysis)
+
+wd <- getwd()
+write.csv(indiv_analysis, file=paste(wd,"/data/analysis_ready_individual_data_pollock_length.csv", sep=""))
