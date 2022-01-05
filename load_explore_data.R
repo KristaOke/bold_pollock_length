@@ -124,3 +124,10 @@ length(datjoin$SURVEY) #uh oh got longer did some not match?
 
 datjoin <- datjoin[which(duplicated(datjoin)==FALSE),]
 length(datjoin$SURVEY) #drops 5711 rows so looks good
+
+#calc julian day------
+library(lubridate)
+
+datjoin$Date <- chron::dates(as.character(datjoin$TOW_DATE))
+
+datjoin$julian <- lubridate::yday(datjoin$Date)
