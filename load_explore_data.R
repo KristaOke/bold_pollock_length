@@ -100,3 +100,27 @@ ggplot(indiv_dat, aes(LENGTH)) + geom_histogram() + facet_wrap(~YEAR)
 
 table(indiv_dat$YEAR, indiv_dat$AGE) #proportion at age seems to change over time, likely good we model at age
   
+
+
+
+
+
+#join to get day of year------
+
+#going to try to match HAULJOIN to df from other project to try and get day of year for length measurements
+
+datL <- read.csv(("./data/survey data/Litzow_pollock_02032021.csv"))
+unique(datL$CRUISE)
+length(intersect(datL$HAULJOIN, dat2$HAULJOIN)) #5872
+length(unique(dat2$HAULJOIN)) #5872 MATCH!
+
+names(dat2)
+names(datL)
+
+datjoin <- left_join(dat2, datL)
+names(datjoin)
+length(datjoin$SURVEY) #uh oh got longer did some not match?
+#huh both dat2 and datL have 5711 duplicated rows
+
+datjoin <- datjoin[which(duplicated(datjoin)==FALSE),]
+length(datjoin$SURVEY) #drops 5711 rows so looks good
