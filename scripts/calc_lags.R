@@ -72,5 +72,72 @@ wd <- getwd()
 write.csv(lagged_dat, file=paste(wd,"/data/analysis_ready_lagged_data_pollock_length.csv", sep=""))
 
 
+#calc last year last age lag-----------------------------------------------------------------------
+
+dat2lagsub <- dat2lag
+
+dat2lagsub$lastyr_lastage_F <-NA
+
+yrs <- unique(dat2lagsub$YEAR)
+counter <- 1
+k<-2 
+for(k in 2:length(yrs)){
+  temp.year <- yrs[k]
+  prev.year <- yrs[k-1]
+  temp.dat <- dat2lagsub[which(dat2lagsub$YEAR==temp.year),]
+  ages <- unique(temp.dat$AGE)
+  g<-2
+  for (g in 2:length(ages)) {
+  prev.age <- ages[g-1]
+  if(temp.year>1964){ dat2lagsub$lastyr_lastage_F[counter] <- dat2lagsub$F[which(dat2lagsub$YEAR==prev.year &
+                                                                    dat2lagsub$AGE==prev.age )]}
+  counter <- counter + 1
+ }
+} #not working yet!!
+
+
+#perhaps easier to do this by joining to a staggered year column??
+
+#copied from other script
+#load fisheries mort data calculated from estimated N and catch from EBS assessment (2020???)
+#this will need to be updated with real numbers!
+Fdat <- read.csv("./data/calc_F_from_N_and_C.csv")
+View(Fdat)
+
+#wide format need to rotate to long for analysis and/or plotting
+
+#ok this is awkward but seems to be working fine and can't figure out another way
+piv1_9 <- Fdat %>%
+  pivot_longer(!year, names_to = c(".value", "age"),
+               names_pattern = "(.)(.)")
+
+piv10_15 <- Fdat %>%
+  pivot_longer(!year, names_to = c(".value", "age"),
+               names_pattern = "(.)(..)")
+
+Fdatlong <- rbind(piv1_9, piv10_15)
+Fdatlong <- na.omit(Fdatlong)
+
+Fdatlong$age <- as.integer(Fdatlong$age)
+
+Fdatlong_prevjoin <- Fdatlong
+
+#create lagged year column and use to join
+
+Fdatlong_prevjoin$prevyr_prevage_F <- Fdatlong_prevjoin$F
+
+lagged_dat4join <- lagged_dat
+
+lagged_dat4join$YEAR <- as.numeric(as.character(lagged_dat4join$YEAR))
+
+lagged_dat4join$prevyr <- lagged_dat4join$YEAR - 1
+lagged_dat4join$prevage <- lagged_dat4join$AGE - 1
+
+lagged2prev <- left_join(lagged_dat4join, Fdatlong_prevjoin[,c(1:2,6)], by=c("prevyr"="year", "prevage"="age"))
+#yes working correctly
+
+#save
+wd <- getwd()
+write.csv(lagged2prev, file=paste(wd,"/data/analysis_ready_lagged_prevyr_pollock_length.csv", sep=""))
 
 
