@@ -1168,6 +1168,9 @@ AIC_10lagnoF #all about the same
 
 
 
-
-
-
+library(mgcViz)
+b <- getViz(lag1.4$gam)
+o <- plot( sm(b, 7) )
+o + l_fitLine(colour = "red") + l_rug(mapping = aes(x=x, y=y), alpha = 0.8) +
+  l_ciLine(mul = 5, colour = "blue", linetype = 2) + 
+  l_points(shape = 19, size = 1, alpha = 0.1) + theme_classic()
