@@ -9,6 +9,7 @@
 library(ggplot2)
 
 #get data saved in load_explore_covar_data
+wd <- getwd()
 analysis_dat <- read.csv(file=paste(wd,"/data/analysis_ready_data_pollock_length.csv", sep=""), row.names=1)
 
 analysis_dat <- analysis_dat[which(analysis_dat$AGE<11),]
