@@ -7,6 +7,10 @@
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 library(tidyverse)
+library("rnaturalearth")
+library("rnaturalearthdata")
+library( "ggspatial" )
+library("sf")
 
 #data
 wd <- getwd()
@@ -14,6 +18,22 @@ lagged2prev <- read.csv(file=paste(wd,"/data/analysis_ready_lagged_prevyr_polloc
 
 lagged2prev <- lagged2prev[which(lagged2prev$AGE<11),]
 lagged2prev$YEAR <- as.factor(lagged2prev$YEAR)
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+ggplot(data = world) +
+  geom_sf() +
+  coord_sf(xlim = c(-178, -155), ylim = c(53, 65), expand = TRUE) +
+  annotation_scale(location = "bl", width_hint = 0.5) +
+  # geom_point(aes(LONGITUDE, LATITUDE, colour=mean_station_bottemp), data=all_analysis_dat) +   
+  # scale_colour_gradient2(low="blue", high="red", guide="colorbar") + 
+  geom_point(aes(LONGITUDE, LATITUDE, 
+                 col=as.factor(STRATUM)), data=lagged2prev) + theme_bw() 
+
+#drop stations in northern bering
+lagged2prev <- lagged2prev[which(lagged2prev$STRATUM!="81"&
+                                   lagged2prev$STRATUM!="71" &
+                                   lagged2prev$STRATUM!="70"),]
 
 #GAMs-----
 
