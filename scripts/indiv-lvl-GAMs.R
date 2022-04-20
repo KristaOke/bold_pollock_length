@@ -8,6 +8,10 @@
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 library(ggplot2)
+library("rnaturalearth")
+library("rnaturalearthdata")
+library( "ggspatial" )
+library("sf")
 
 #get data saved in load_explore_covar_data
 indiv_lvl_dat <- read.csv(file=paste(wd,"/data/analysis_ready_individual_data_pollock_length.csv", sep=""), row.names=1)
@@ -17,6 +21,22 @@ indiv_lvl_dat$YEAR <- as.factor(indiv_lvl_dat$YEAR)
 
 summary(indiv_lvl_dat)
 
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+ggplot(data = world) +
+  geom_sf() +
+  coord_sf(xlim = c(-178, -155), ylim = c(53, 65), expand = TRUE) +
+  annotation_scale(location = "bl", width_hint = 0.5) +
+  # geom_point(aes(LONGITUDE, LATITUDE, colour=mean_station_bottemp), data=all_analysis_dat) +   
+  # scale_colour_gradient2(low="blue", high="red", guide="colorbar") + 
+  geom_point(aes(LONGITUDE, LATITUDE, 
+                 col=as.factor(STRATUM)), data=indiv_lvl_dat) + theme_bw() 
+
+#drop stations in northern bering
+indiv_lvl_dat <- indiv_lvl_dat[which(indiv_lvl_dat$STRATUM!="81"&
+                                       indiv_lvl_dat$STRATUM!="71" &
+                                       indiv_lvl_dat$STRATUM!="70"),]
 
 #look at covars
 ggplot(indiv_lvl_dat, aes(YEAR, pelagic_forager_biomass)) +
