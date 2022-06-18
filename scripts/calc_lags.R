@@ -11,7 +11,7 @@
 
 dat2lag <- read.csv(file=paste(wd,"/data/analysis_ready_individual_data_pollock_length.csv", sep=""), row.names=1)
 
-dat2lag <- dat2lag[which(dat2lag$AGE<11),]
+#dat2lag <- dat2lag[which(dat2lag$AGE<11),]
 #indiv_lvl_dat$YEAR <- as.factor(indiv_lvl_dat$YEAR)
 #DON'T make year a factor we need to do some math
 
@@ -131,7 +131,7 @@ lagged_dat4join <- lagged_dat
 lagged_dat4join$YEAR <- as.numeric(as.character(lagged_dat4join$YEAR))
 
 lagged_dat4join$prevyr <- lagged_dat4join$YEAR - 1
-lagged_dat4join$prevage <- lagged_dat4join$AGE - 1
+lagged_dat4join$prevage <- as.numeric(as.character(lagged_dat4join$AGE)) - 1
 
 lagged2prev <- left_join(lagged_dat4join, Fdatlong_prevjoin[,c(1:2,6)], by=c("prevyr"="year", "prevage"="age"))
 #yes working correctly
