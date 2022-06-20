@@ -17,11 +17,21 @@ View(Fdat)
 #wide format need to rotate to long for analysis and/or plotting
 
 #ok this is awkward but seems to be working fine and can't figure out another way
-piv1_9 <- Fdat %>%
+
+#first split out single vs double digit columns
+Fdat_single <- Fdat[,c("year", "N1", "N2", "N3", "N4", "N5", "N6", "N7", "N8", "N9",
+                       "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9",
+                       "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9")]
+
+Fdat_double <- Fdat[,c("year", "N11", "N12", "N13", "N14", "N15", 
+                       "C11", "C12", "C13", "C14", "C15", 
+                       "F11", "F12", "F13", "F14", "F15")]
+
+piv1_9 <- Fdat_single %>%
   pivot_longer(!year, names_to = c(".value", "age"),
                names_pattern = "(.)(.)")
 
-piv10_15 <- Fdat %>%
+piv10_15 <- Fdat_double %>%
   pivot_longer(!year, names_to = c(".value", "age"),
                names_pattern = "(.)(..)")
 
