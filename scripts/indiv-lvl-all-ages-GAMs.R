@@ -11,15 +11,18 @@ library("rnaturalearth")
 library("rnaturalearthdata")
 library( "ggspatial" )
 library("sf")
+library(gratia)
+library(visreg)
+library(sjPlot)
 
 
 #data
-
+wd <- getwd()
 lagged_dat <- read.csv(file=paste(wd,"/data/analysis_ready_lagged_data_pollock_length.csv", sep=""), row.names=1)
 
-lagged_dat <- lagged_dat[which(lagged_dat$AGE<11),]
+lagged_dat <- lagged_dat[which(lagged_dat$AGE<16),]
 lagged_dat$YEAR <- as.factor(lagged_dat$YEAR)
-
+lagged_dat$AGE <- as.factor(lagged_dat$AGE)
 
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
@@ -37,9 +40,140 @@ lagged_dat <- lagged_dat[which(lagged_dat$STRATUM!="81"&
                                  lagged_dat$STRATUM!="71" &
                                  lagged_dat$STRATUM!="70"),]
 
+lagged_dat$cohort <- as.numeric(as.character(lagged_dat$YEAR)) - as.numeric(as.character(lagged_dat$AGE))
+lagged_dat$cohort <- as.factor(lagged_dat$cohort)
+
+#running models on data that isn't scaled is looking not good!
+
+lagged_sub <- lagged_dat[,c("LATITUDE", "LONGITUDE", "YEAR", "HAUL",
+                            "BOTTOM_TEMPERATURE", "SPECIMENID", "SEX", "LENGTH",                     
+                            "WEIGHT", "AGE", "julian", "south.sst.amj",
+                            "mean_annual_F3plus.x",
+                            "pollock_abun_bil_at_age",
+                            "pollock_survey_abun_mil_at_age",
+                            "apex_pred_biomass",
+                            "forage_fish_biomass",
+                            "pelagic_forager_biomass",
+                            "lag1_F", "lag2_F", "lag3_F",          
+                            "lag4_F", "lag5_F", "lag6_F",              
+                            "lag7_F", "lag8_F", "lag9_F",      
+                            "lag10_F", "cohort")]
+
+#mutate is turning cohort and only cohort into a string of NAs?
+lagged_sub$cohort <- as.character(lagged_sub$cohort)
+
+#z-score variables of interest BY AGE
+
+scaledtbl <- lagged_sub %>% group_by(AGE) %>%
+  mutate(length_scaled=scale(LENGTH),
+         weight_scaled=scale(WEIGHT),
+         mean_ann_F3plus_scaled=scale(mean_annual_F3plus.x),
+         pol_abun_bil_at_age_scaled=scale(pollock_abun_bil_at_age),
+         apex_pred_biom_scaled=scale(apex_pred_biomass),
+         forage_fish_biom_scaled=scale(forage_fish_biomass),
+         pelagic_forager_biom_scaled=scale(pelagic_forager_biomass),
+         lag1_F_scaled=scale(lag1_F),
+         lag2_F_scaled=scale(lag2_F),
+         lag3_F_scaled=scale(lag3_F),
+         lag4_F_scaled=scale(lag4_F),
+         lag5_F_scaled=scale(lag5_F),
+         lag6_F_scaled=scale(lag6_F),
+         lag7_F_scaled=scale(lag7_F),
+         lag8_F_scaled=scale(lag8_F),
+         lag9_F_scaled=scale(lag9_F),
+         lag10_F_scaled=scale(lag10_F),
+         julian_scaled=scale(julian),
+         south.sst.amj.scaled=scale(south.sst.amj))
+
+scaled_dat <- as.data.frame(scaledtbl)
+
+scaled_dat$cohort <- as.factor(scaled_dat$cohort)
 
 #GAMs-----
 
 library(mgcv)
 library(gamm4)
 library(car)
+
+
+#lets start out with no lag, all ages, with interactions
+
+#including all at once doesn't seem to work, maybe first look to see if any look nonlinear
+
+ggplot(lagged_dat, aes(mean_annual_F3plus.x, LENGTH)) + geom_point() + geom_smooth() +
+  facet_wrap(~AGE, scales="free")
+
+ggplot(lagged_dat, aes(pollock_abun_bil_at_age, LENGTH)) + geom_point() + geom_smooth() +
+  facet_wrap(~AGE, scales="free")
+
+ggplot(lagged_dat, aes(apex_pred_biomass, LENGTH)) + geom_point() + geom_smooth() +
+  facet_wrap(~AGE, scales="free")
+
+ggplot(lagged_dat, aes(forage_fish_biomass, LENGTH)) + geom_point() + geom_smooth() +
+  facet_wrap(~AGE, scales="free")
+
+ggplot(lagged_dat, aes(pelagic_forager_biomass, LENGTH)) + geom_point() + geom_smooth() +
+  facet_wrap(~AGE, scales="free")
+
+#scaled
+ggplot(scaled_dat, aes(mean_ann_F3plus_scaled, length_scaled, col=AGE)) + geom_point() + 
+  geom_smooth(method="lm", col="black") +
+  facet_wrap(~AGE, scales="free")
+
+ggplot(scaled_dat, aes(pol_abun_bil_at_age_scaled, length_scaled, col=AGE)) + geom_point() + 
+  geom_smooth(method="lm", col="black") +
+  facet_wrap(~AGE, scales="free")
+
+ggplot(scaled_dat, aes(apex_pred_biom_scaled, length_scaled, col=AGE)) + geom_point() + 
+  geom_smooth(method="lm", col="black") +
+  facet_wrap(~AGE, scales="free")
+
+ggplot(scaled_dat, aes(forage_fish_biom_scaled, length_scaled, col=AGE)) + geom_point() + 
+  geom_smooth(method="lm", col="black") +
+  facet_wrap(~AGE, scales="free")
+
+ggplot(scaled_dat, aes(pelagic_forager_biom_scaled, length_scaled, col=AGE)) + geom_point() + 
+  geom_smooth(method="lm", col="black") +
+  facet_wrap(~AGE, scales="free")
+
+ggplot(scaled_dat, aes(south.sst.amj.scaled, length_scaled, col=AGE)) + geom_point() + 
+  geom_smooth(method="lm", col="black") +
+  facet_wrap(~AGE, scales="free")
+
+
+#none look particularly nonlinear, let's try linear interactions
+
+allnolag <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                    mean_ann_F3plus_scaled:AGE + 
+                    pol_abun_bil_at_age_scaled:AGE +
+                  apex_pred_biom_scaled:AGE + 
+                  forage_fish_biom_scaled:AGE + 
+                  pelagic_forager_biom_scaled:AGE +
+                    s(cohort, bs="re"),
+                random=~(1|YEAR/HAUL), data=scaled_dat )
+gam.check(allnolag$gam) #
+summary(allnolag$gam) #
+summary(allnolag$mer) #
+AIC_allnolag <- AIC(allnolag$mer) #
+plot(allnolag$gam)
+anova(allnolag$gam)
+plot_model(allnolag[[2]], type="int")
+plot_model(allnolag$gam) 
+#saveRDS(allnolag, file=paste(wd,"/scripts/model_output_all-ages_lin_interactions.rds", sep=""))
+
+
+
+allnonlin <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                    s(mean_ann_F3plus_scaled, by=AGE, k=4) + 
+                    s(pol_abun_bil_at_age_scaled, by=AGE, k=4) +
+                    s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                    s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                    s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                    s(cohort, bs="re"),
+                  random=~(1|YEAR/HAUL), data=scaled_dat )
+gam.check(allnonlin$gam)
+#saveRDS(allnonlin, file=paste(wd,"/scripts/model_output_all-ages_nonlin_interactions.rds", sep=""))
+allnonlin <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_nonlin_interactions.rds", sep=""))
+summary(allnonlin$gam)
+anova(allnonlin$gam)
+plot(allnonlin$gam)
