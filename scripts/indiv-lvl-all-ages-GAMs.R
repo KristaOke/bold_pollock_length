@@ -69,6 +69,7 @@ scaledtbl <- lagged_sub %>% group_by(AGE) %>%
          weight_scaled=scale(WEIGHT),
          mean_ann_F3plus_scaled=scale(mean_annual_F3plus.x),
          pol_abun_bil_at_age_scaled=scale(pollock_abun_bil_at_age),
+         pollock_survey_abun_mil_at_age_scaled=scale(pollock_survey_abun_mil_at_age),
          apex_pred_biom_scaled=scale(apex_pred_biomass),
          forage_fish_biom_scaled=scale(forage_fish_biomass),
          pelagic_forager_biom_scaled=scale(pelagic_forager_biomass),
@@ -106,6 +107,9 @@ ggplot(lagged_dat, aes(mean_annual_F3plus.x, LENGTH)) + geom_point() + geom_smoo
 ggplot(lagged_dat, aes(pollock_abun_bil_at_age, LENGTH)) + geom_point() + geom_smooth() +
   facet_wrap(~AGE, scales="free")
 
+ggplot(lagged_dat, aes(pollock_survey_abun_mil_at_age, LENGTH)) + geom_point() + geom_smooth() +
+  facet_wrap(~AGE, scales="free")
+
 ggplot(lagged_dat, aes(apex_pred_biomass, LENGTH)) + geom_point() + geom_smooth() +
   facet_wrap(~AGE, scales="free")
 
@@ -121,6 +125,10 @@ ggplot(scaled_dat, aes(mean_ann_F3plus_scaled, length_scaled, col=AGE)) + geom_p
   facet_wrap(~AGE, scales="free")
 
 ggplot(scaled_dat, aes(pol_abun_bil_at_age_scaled, length_scaled, col=AGE)) + geom_point() + 
+  geom_smooth(method="lm", col="black") +
+  facet_wrap(~AGE, scales="free")
+
+ggplot(scaled_dat, aes(pollock_survey_abun_mil_at_age_scaled, length_scaled, col=AGE)) + geom_point() + 
   geom_smooth(method="lm", col="black") +
   facet_wrap(~AGE, scales="free")
 
