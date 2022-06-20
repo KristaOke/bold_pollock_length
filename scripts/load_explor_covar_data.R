@@ -170,7 +170,7 @@ colnames(pcod_dat)[colnames(pcod_dat) == 'SB_SD'] <-
 
 
 #pollock abundance data========
-
+#ages 1-10+ estimated billions from STOCK ASSESSMENT MODEL
 polabun_dat <- read.csv("./data/estimated_billions_pollock_at_age_from_assmodel_table1-28_2021assessment.csv")
 View(polabun_dat)
 
@@ -195,6 +195,42 @@ colnames(polabun_dat)[colnames(polabun_dat) == 'age9'] <-
 colnames(polabun_dat)[colnames(polabun_dat) == 'age10plus'] <- 
   'age10pluspollock_abund'
 
+#ages 1-15 estimated millions from BOTTOM TRAWL SURVEY
+polabun_older <- read.csv("./data/estimated_millions_at_age_pollock_tab16_2021assessment.csv")
+View(polabun_older)
+polabun_older <- polabun_older[-c(41:42), -c(18:20)]
+
+colnames(polabun_older)[colnames(polabun_older) == 'age1'] <- 
+  'age1_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age2'] <- 
+  'age2_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age3'] <- 
+  'age3_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age4'] <- 
+  'age4_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age5'] <- 
+  'age5_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age6'] <- 
+  'age6_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age7'] <- 
+  'age7_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age8'] <- 
+  'age8_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age9'] <- 
+  'age9_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age10'] <- 
+  'age10_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age11'] <- 
+  'age11_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age12'] <- 
+  'age12_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age13'] <- 
+  'age13_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age14'] <- 
+  'age14_survey_pollock_abund'
+colnames(polabun_older)[colnames(polabun_older) == 'age15'] <- 
+  'age15_survey_pollock_abund'
+
 #3-plus from 2020 assessment
 
 pol3plus_dat <- read.csv("./data/estimated_3plus_biomass_2020assessment_tab28.csv")
@@ -203,6 +239,7 @@ View(pol3plus_dat)
 #joins======
 
 #join to pollock data loaded in load_explore_data.R
+yrly_means2 <- read.csv(file=paste(wd,"/data/mean_annual_size_global.csv", sep=""))
 
 Fdatlong$age <- as.integer(Fdatlong$age)
 
@@ -340,6 +377,40 @@ mean_all <- left_join(mean_all, pivp, by=c("YEAR"="Year", "AGE"="age"))
 
 mean_all <- left_join(mean_all, pol3plus_dat, by=c("YEAR"="Year"))
 
+#and again w survey data (goes up to age 15)
+
+polabun_older <- polabun_older[,-c(17)] #drop total column
+
+pivpS <- polabun_older %>%
+  pivot_longer(!Year)
+
+pivpS$age <- NA
+pivpS$age[which(pivpS$name=="age1_survey_pollock_abund")] <- "1"
+pivpS$age[which(pivpS$name=="age2_survey_pollock_abund")] <- "2"
+pivpS$age[which(pivpS$name=="age3_survey_pollock_abund")] <- "3"
+pivpS$age[which(pivpS$name=="age4_survey_pollock_abund")] <- "4"
+pivpS$age[which(pivpS$name=="age5_survey_pollock_abund")] <- "5"
+pivpS$age[which(pivpS$name=="age6_survey_pollock_abund")] <- "6"
+pivpS$age[which(pivpS$name=="age7_survey_pollock_abund")] <- "7"
+pivpS$age[which(pivpS$name=="age8_survey_pollock_abund")] <- "8"
+pivpS$age[which(pivpS$name=="age9_survey_pollock_abund")] <- "9"
+pivpS$age[which(pivpS$name=="age10_survey_pollock_abund")] <- "10"
+pivpS$age[which(pivpS$name=="age11_survey_pollock_abund")] <- "11"
+pivpS$age[which(pivpS$name=="age12_survey_pollock_abund")] <- "12"
+pivpS$age[which(pivpS$name=="age13_survey_pollock_abund")] <- "13"
+pivpS$age[which(pivpS$name=="age14_survey_pollock_abund")] <- "14"
+pivpS$age[which(pivpS$name=="age15_survey_pollock_abund")] <- "15"
+pivpS$age <- as.factor(pivpS$age)
+
+colnames(pivpS)[colnames(pivpS) == 'value'] <- 
+  'pollock_survey_abun_mil_at_age'              
+
+pivpS <- pivpS[,-2]
+
+#mean_all$AGE <- as.factor(as.character(mean_all$AGE))
+pivpS$Year <- as.integer(as.character(pivpS$Year))
+
+mean_all <- left_join(mean_all, pivpS, by=c("YEAR"="Year", "AGE"="age"))
 
 
 #join to clim data

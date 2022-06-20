@@ -32,7 +32,18 @@ ggplot(dat2, aes(YEAR, LENGTH)) +
 #means
 yrly_means2 <- dat2 %>% group_by(YEAR, AGE) %>% summarise(mean_annual_size_global=mean(LENGTH, na.rm=TRUE), n=n())
 
-ggplot(dat2, aes(LENGTH, WEIGHT, col=as.factor(AGE))) + geom_point() + facet_wrap(~YEAR)
+wd <- getwd()
+write.csv(yrly_means2, file=paste(wd,"/data/mean_annual_size_global.csv", sep=""))
+
+ggplot(dat2, aes(LENGTH, WEIGHT, col=as.factor(AGE))) + geom_point() + facet_wrap(~YEAR) 
+
+ggplot(yrly_means2[which(yrly_means2$AGE<11),], aes(YEAR, mean_annual_size_global, col=as.factor(AGE))) + 
+  geom_point() + geom_smooth(method="lm") + facet_wrap(~AGE, scales="free")
+
+yrly_means3 <- dat2[which(dat2$AGE<11),] %>% group_by(YEAR) %>% summarise(mean_annual_size_global=mean(LENGTH, na.rm=TRUE), n=n())
+
+ggplot(yrly_means3, aes(YEAR, mean_annual_size_global)) + geom_point() 
+
 
 #look more at indiv level data
 
