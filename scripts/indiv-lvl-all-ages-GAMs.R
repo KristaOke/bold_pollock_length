@@ -169,6 +169,14 @@ plot_model(allnolag[[2]], type="int")
 plot_model(allnolag$gam) 
 #saveRDS(allnolag, file=paste(wd,"/scripts/model_output_all-ages_lin_interactions.rds", sep=""))
 
+allnolagML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                    mean_ann_F3plus_scaled:AGE + 
+                    pol_abun_bil_at_age_scaled:AGE +
+                    apex_pred_biom_scaled:AGE + 
+                    forage_fish_biom_scaled:AGE + 
+                    pelagic_forager_biom_scaled:AGE +
+                    s(cohort, bs="re"),
+                  random=~(1|YEAR/HAUL), data=scaled_dat )
 
 
 allnonlin <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
@@ -178,10 +186,22 @@ allnonlin <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LO
                     s(forage_fish_biom_scaled, by=AGE, k=4) + 
                     s(pelagic_forager_biom_scaled, by=AGE, k=4) +
                     s(cohort, bs="re"),
-                  random=~(1|YEAR/HAUL), data=scaled_dat )
+                  random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
 gam.check(allnonlin$gam)
 #saveRDS(allnonlin, file=paste(wd,"/scripts/model_output_all-ages_nonlin_interactions.rds", sep=""))
 allnonlin <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_nonlin_interactions.rds", sep=""))
 summary(allnonlin$gam)
 anova(allnonlin$gam)
 plot(allnonlin$gam)
+
+allnonlinML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                     s(mean_ann_F3plus_scaled, by=AGE, k=4) + 
+                     s(pol_abun_bil_at_age_scaled, by=AGE, k=4) +
+                     s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                     s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                     s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                     s(cohort, bs="re"),
+                   random=~(1|YEAR/HAUL), data=scaled_dat, , REML=FALSE )
+
+
+
