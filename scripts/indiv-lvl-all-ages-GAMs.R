@@ -176,7 +176,8 @@ allnolagML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(L
                     forage_fish_biom_scaled:AGE + 
                     pelagic_forager_biom_scaled:AGE +
                     s(cohort, bs="re"),
-                  random=~(1|YEAR/HAUL), data=scaled_dat )
+                  random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+#saveRDS(allnolagML, file=paste(wd,"/scripts/model_output_all-ages_lin_interactionsML.rds", sep=""))
 
 
 allnonlin <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
@@ -186,7 +187,7 @@ allnonlin <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LO
                     s(forage_fish_biom_scaled, by=AGE, k=4) + 
                     s(pelagic_forager_biom_scaled, by=AGE, k=4) +
                     s(cohort, bs="re"),
-                  random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+                  random=~(1|YEAR/HAUL), data=scaled_dat)
 gam.check(allnonlin$gam)
 #saveRDS(allnonlin, file=paste(wd,"/scripts/model_output_all-ages_nonlin_interactions.rds", sep=""))
 allnonlin <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_nonlin_interactions.rds", sep=""))
@@ -201,7 +202,74 @@ allnonlinML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(
                      s(forage_fish_biom_scaled, by=AGE, k=4) + 
                      s(pelagic_forager_biom_scaled, by=AGE, k=4) +
                      s(cohort, bs="re"),
-                   random=~(1|YEAR/HAUL), data=scaled_dat, , REML=FALSE )
+                   random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+#saveRDS(allnonlinML, file=paste(wd,"/scripts/model_output_all-ages_nonlin_interactionsML.rds", sep=""))
+gam.check(allnonlinML$gam)
+summary(allnonlinML$gam)
+plot(allnonlinML$gam)
+
+
+
+#repeat with SURVEY ABUNDANCES (more age classes)-----
+
+#none look particularly nonlinear, let's try linear interactions
+
+surnolag <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                    mean_ann_F3plus_scaled:AGE + 
+                    pollock_survey_abun_mil_at_age_scaled:AGE +
+                    apex_pred_biom_scaled:AGE + 
+                    forage_fish_biom_scaled:AGE + 
+                    pelagic_forager_biom_scaled:AGE +
+                    s(cohort, bs="re"),
+                  random=~(1|YEAR/HAUL), data=scaled_dat )
+gam.check(surnolag$gam) #
+summary(surnolag$gam) #
+summary(surnolag$mer) #
+AIC_surnolag <- AIC(surnolag$mer) #
+plot(surnolag$gam)
+anova(surnolag$gam)
+plot_model(surnolag[[2]], type="int")
+plot_model(surnolag$gam) 
+#saveRDS(surnolag, file=paste(wd,"/scripts/model_output_all-ages_lin_interactions_surv-abun.rds", sep=""))
+
+surnolagML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                      mean_ann_F3plus_scaled:AGE + 
+                      pollock_survey_abun_mil_at_age_scaled:AGE +
+                      apex_pred_biom_scaled:AGE + 
+                      forage_fish_biom_scaled:AGE + 
+                      pelagic_forager_biom_scaled:AGE +
+                      s(cohort, bs="re"),
+                    random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+#saveRDS(surnolagML, file=paste(wd,"/scripts/model_output_all-ages_lin_interaction_surv-abunsML.rds", sep=""))
+
+
+surnonlin <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                     s(mean_ann_F3plus_scaled, by=AGE, k=4) + 
+                     s(pollock_survey_abun_mil_at_age_scaled, by=AGE, k=4) +
+                     s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                     s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                     s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                     s(cohort, bs="re"),
+                   random=~(1|YEAR/HAUL), data=scaled_dat)
+gam.check(surnonlin$gam)
+#saveRDS(surnonlin, file=paste(wd,"/scripts/model_output_all-ages_nonlin_interactions_surv-abun.rds", sep=""))
+surnonlin <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_nonlin_interactions_surv-abun.rds", sep=""))
+summary(surnonlin$gam)
+anova(surnonlin$gam)
+plot(surnonlin$gam)
+
+surnonlinML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       s(mean_ann_F3plus_scaled, by=AGE, k=4) + 
+                       s(pollock_survey_abun_mil_at_age_scaled, by=AGE, k=4) +
+                       s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                       s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                       s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+#saveRDS(surnonlinML, file=paste(wd,"/scripts/model_output_all-ages_nonlin_interactionsML_surv-abun.rds", sep=""))
+gam.check(surnonlinML$gam)
+summary(surnonlinML$gam)
+plot(surnonlinML$gam)
 
 
 
