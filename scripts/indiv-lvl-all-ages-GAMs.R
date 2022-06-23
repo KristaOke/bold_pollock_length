@@ -241,6 +241,8 @@ surnolagML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(L
                       s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
 #saveRDS(surnolagML, file=paste(wd,"/scripts/model_output_all-ages_lin_interaction_surv-abunsML.rds", sep=""))
+summary(surnolagML$gam)
+plot(surnolagML$gam)
 
 
 surnonlin <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
@@ -271,5 +273,5 @@ gam.check(surnonlinML$gam)
 summary(surnonlinML$gam)
 plot(surnonlinML$gam)
 
-
+par(mfrow = c(3, 5))
 
