@@ -275,3 +275,61 @@ plot(surnonlinML$gam)
 
 par(mfrow = c(3, 5))
 
+
+
+
+#switch individually to linear since many seem not very linear but still significant
+
+linF3ML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       mean_ann_F3plus_scaled:AGE + 
+                       s(pollock_survey_abun_mil_at_age_scaled, by=AGE, k=4) +
+                       s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                       s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                       s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(linF3ML, file=paste(wd,"/scripts/model_output_all-ages_linearF3ML_surv-abun.rds", sep=""))
+
+linsurvML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       s(mean_ann_F3plus_scaled, by=AGE, k=4) + 
+                       pollock_survey_abun_mil_at_age_scaled:AGE +
+                       s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                       s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                       s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(linsurvML, file=paste(wd,"/scripts/model_output_all-ages_linearsurvML_surv-abun.rds", sep=""))
+
+
+linapexML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       s(mean_ann_F3plus_scaled, by=AGE, k=4) + 
+                       s(pollock_survey_abun_mil_at_age_scaled, by=AGE, k=4) +
+                       apex_pred_biom_scaled:AGE + 
+                       s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                       s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(linapexML, file=paste(wd,"/scripts/model_output_all-ages_linearapexML_surv-abun.rds", sep=""))
+
+
+linforageML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       s(mean_ann_F3plus_scaled, by=AGE, k=4) + 
+                       s(pollock_survey_abun_mil_at_age_scaled, by=AGE, k=4) +
+                       s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                       forage_fish_biom_scaled:AGE + 
+                       s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(linforageML, file=paste(wd,"/scripts/model_output_all-ages_linearforageML_surv-abun.rds", sep=""))
+
+
+linpelagicML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       s(mean_ann_F3plus_scaled, by=AGE, k=4) + 
+                       s(pollock_survey_abun_mil_at_age_scaled, by=AGE, k=4) +
+                       s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                       s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                       pelagic_forager_biom_scaled:AGE +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(linpelagicML, file=paste(wd,"/scripts/model_output_all-ages_linearpelagicML_surv-abun.rds", sep=""))
+
