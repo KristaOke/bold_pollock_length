@@ -269,6 +269,8 @@ surnonlinML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(
                        s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
 #saveRDS(surnonlinML, file=paste(wd,"/scripts/model_output_all-ages_nonlin_interactionsML_surv-abun.rds", sep=""))
+surnonlinML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_nonlin_interactionsML_surv-abun.rds", sep=""))
+
 gam.check(surnonlinML$gam)
 summary(surnonlinML$gam)
 plot(surnonlinML$gam)
@@ -333,3 +335,16 @@ linpelagicML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2
                      random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
 saveRDS(linpelagicML, file=paste(wd,"/scripts/model_output_all-ages_linearpelagicML_surv-abun.rds", sep=""))
 
+AIC(linpelagicML$mer, linforageML$mer, linapexML$mer, linsurvML$mer, linF3ML$mer, surnolagML$mer, 
+    surnonlinML$mer)
+#nonlinear is lowest AIC but far momre parameters
+
+#model selection using dredge--------------
+
+#change na global option
+options(na.action = "na.fail")
+
+library(MuMIn)
+
+dredge_out <- dredge(surnonlinML, beta="sd")
+#need to confirm the beta is correct here
