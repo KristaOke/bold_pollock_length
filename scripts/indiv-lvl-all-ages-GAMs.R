@@ -346,5 +346,19 @@ options(na.action = "na.fail")
 
 library(MuMIn)
 
+
+#now that na action is set need to re-run the 'global' model we want to use
+glob_mod <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                     s(mean_ann_F3plus_scaled, by=AGE, k=4) + 
+                     s(pol_abun_bil_at_age_scaled, by=AGE, k=4) +
+                     s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                     s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                     s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                     s(cohort, bs="re"),
+                   random=~(1|YEAR/HAUL), data=scaled_dat)
+gam.check(glob_mod$gam)
+#saveRDS(glob_mod, file=paste(wd,"/scripts/global_model_2_dredge.rds", sep=""))
+glob_mod <- readRDS(file=paste(wd,"/scripts/global_model_2_dredge.rds", sep=""))
+
 dredge_out <- dredge(surnonlinML, beta="sd")
 #need to confirm the beta is correct here
