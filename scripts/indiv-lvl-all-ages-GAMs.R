@@ -413,8 +413,20 @@ sm_pelg_ML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(L
 saveRDS(sm_pelg_ML, file=paste(wd,"/scripts/model_output_all-ages_smooth_pelg.rds", sep=""))
 sm_pelg_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_smooth_pelg.rds", sep=""))
 
+#here best base comparison is likely surnonlinML
 AIC(sm_F_ML$mer, sm_surv_ML$mer, sm_apex_ML$mer, sm_forg_ML$mer,sm_pelg_ML$mer,
-    base_w_AGE_ML$mer, surnolagML$mer, surnonlinML$mer)
+    base_w_AGE_ML$mer, surnolagML$mer, surnonlinML$mer) #yes AIC gets worse for each but not far worse
+#are they really worse considering that full model has +28 dfs?
+
+anova(sm_F_ML$mer, sm_surv_ML$mer, sm_apex_ML$mer, sm_forg_ML$mer,sm_pelg_ML$mer,
+       base_w_AGE_ML$mer, surnolagML$mer, surnonlinML$mer)
+
+anova(sm_F_ML$mer, surnonlinML$mer) #full better by all metrics except BIC
+anova(sm_surv_ML$mer, surnonlinML$mer) #full better by all metrics except BIC
+anova(sm_apex_ML$mer, surnonlinML$mer) #full better by all metrics except BIC
+anova(sm_forg_ML$mer, surnonlinML$mer) #full better by all metrics except BIC BUT if add 56 AIC units (2*28 extra paramters)
+#then AIC is NOT better for full model, little support for s(forg, by=AGE) over s(forg)
+anova(sm_pelg_ML$mer, surnonlinML$mer) #full better by all metrics except BIC
 
 
 #compare to just linear terms one by one------
@@ -491,6 +503,24 @@ lin_pelg_ML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(
 saveRDS(lin_pelg_ML, file=paste(wd,"/scripts/model_output_all-ages_linear_pelg.rds", sep=""))
 lin_pelg_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_linear_pelg.rds", sep=""))
 
+AIC(base_w_AGE_ML$mer, lin_F_ML$mer, lin_surv_ML$mer, lin_apex_ML$mer, 
+    lin_forg_ML$mer, lin_pelg_ML$mer, surnolagML$mer, surnonlinML$mer)
+
+anova(base_w_AGE_ML$mer, lin_F_ML$mer, lin_surv_ML$mer, lin_apex_ML$mer, 
+    lin_forg_ML$mer, lin_pelg_ML$mer, surnolagML$mer, surnonlinML$mer)
+
+anova(base_w_AGE_ML$mer, lin_F_ML$mer) #full better by all metrics except BIC
+anova(base_w_AGE_ML$mer, lin_surv_ML$mer) #full better by all metrics except BIC
+anova(base_w_AGE_ML$mer, lin_apex_ML$mer) #full better by all metrics except BIC
+anova(base_w_AGE_ML$mer, lin_forg_ML$mer) #full better by all metrics except BIC
+anova(base_w_AGE_ML$mer, lin_pelg_ML$mer) #full better by all metrics except BIC
+
+#are the linear terms worse than the smoothes?
+anova(sm_F_ML$mer, lin_F_ML$mer) #linear is better
+anova(sm_surv_ML$mer, lin_surv_ML$mer) #linear is better
+anova(sm_apex_ML$mer, lin_apex_ML$mer) #linear is better
+anova(sm_forg_ML$mer, lin_forg_ML$mer) #AIC is close and BIC points to smooth, logLik and dev point to linear
+anova(sm_pelg_ML$mer, lin_pelg_ML$mer) #linear is better
 
 #model selection using dredge--------------
 
