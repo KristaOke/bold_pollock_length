@@ -522,6 +522,67 @@ anova(sm_apex_ML$mer, lin_apex_ML$mer) #linear is better
 anova(sm_forg_ML$mer, lin_forg_ML$mer) #AIC is close and BIC points to smooth, logLik and dev point to linear
 anova(sm_pelg_ML$mer, lin_pelg_ML$mer) #linear is better
 
+
+#now drop terms entirely---------------------------------------------
+
+drop_F_ML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                    AGE +
+                    s(pollock_survey_abun_mil_at_age_scaled,  by=AGE, k=4) +
+                    s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                    s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                    s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                    s(cohort, bs="re"),
+                  random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(drop_F_ML, file=paste(wd,"/scripts/model_output_all-ages_drop_F.rds", sep=""))
+drop_F_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_drop_F.rds", sep=""))
+
+
+drop_surv_ML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       AGE + s(mean_ann_F3plus_scaled,  by=AGE, k=4) + 
+                       s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                       s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                       s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(drop_surv_ML, file=paste(wd,"/scripts/model_output_all-ages_drop_surv.rds", sep=""))
+drop_surv_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_drop_surv.rds", sep=""))
+
+
+
+drop_apex_ML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       AGE + s(mean_ann_F3plus_scaled,  by=AGE, k=4) + 
+                       s(pollock_survey_abun_mil_at_age_scaled, by=AGE, k=4) +
+                       s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                       s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(drop_apex_ML, file=paste(wd,"/scripts/model_output_all-ages_drop_apex.rds", sep=""))
+drop_apex_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_drop_apex.rds", sep=""))
+
+
+drop_forg_ML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       AGE + s(mean_ann_F3plus_scaled,  by=AGE, k=4) + 
+                       s(pollock_survey_abun_mil_at_age_scaled, by=AGE, k=4) +
+                       s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                       s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(drop_forg_ML, file=paste(wd,"/scripts/model_output_all-ages_drop_forg.rds", sep=""))
+drop_forg_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_drop_forg.rds", sep=""))
+
+
+drop_pelg_ML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       AGE + s(mean_ann_F3plus_scaled,  by=AGE, k=4) + 
+                       s(pollock_survey_abun_mil_at_age_scaled, by=AGE, k=4) +
+                       s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                       s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(drop_pelg_ML, file=paste(wd,"/scripts/model_output_all-ages_drop_pelg.rds", sep=""))
+drop_pelg_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_drop_pelg.rds", sep=""))
+
+
+
 #model selection using dredge--------------
 
 #change na global option
