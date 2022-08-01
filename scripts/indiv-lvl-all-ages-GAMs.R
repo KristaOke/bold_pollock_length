@@ -601,11 +601,107 @@ anova(base_w_AGE_ML$mer, drop_forg_ML$mer) #not fit to same size dataset???
 anova(base_w_AGE_ML$mer, drop_pelg_ML$mer) #full better by all metrics except BIC
 
 #linear was better than smooth above, how does no term compare to linear?
-anova(drop_F_ML$mer, drop_F_ML$mer) #
-anova(drop_surv_ML$mer, drop_surv_ML$mer) #
-anova(drop_apex_ML$mer, drop_apex_ML$mer) #
-anova(drop_forg_ML$mer, drop_forg_ML$mer) #
-anova(drop_pelg_ML$mer, drop_pelg_ML$mer) #
+anova(drop_F_ML$mer, lin_F_ML$mer) #dropped a little better
+anova(drop_surv_ML$mer, lin_surv_ML$mer) #doesn't work
+anova(drop_apex_ML$mer, lin_apex_ML$mer) #equivalent or drop little better
+anova(drop_forg_ML$mer, lin_forg_ML$mer) #doesn't work
+anova(drop_pelg_ML$mer, lin_pelg_ML$mer) #equivalent or drop little better
+
+#what about R2?
+
+R2.mer.baseAge <- 1-var(residuals(base_w_AGE_ML$mer))/(var(model.response(model.frame(base_w_AGE_ML$mer))))
+#0.2996359
+R2.gam.baseAge <- 1-var(residuals(base_w_AGE_ML$gam))/(var(model.response(model.frame(base_w_AGE_ML$gam))))
+#0.1455954
+
+R2.mer.noF <- 1-var(residuals(drop_F_ML$mer))/(var(model.response(model.frame(drop_F_ML$mer)))) 
+#0.2963923
+R2.gam.noF <- 1-var(residuals(drop_F_ML$gam))/(var(model.response(model.frame(drop_F_ML$gam)))) 
+#0.145479
+
+R2.mer.baseAge - R2.mer.noF #0.003243579
+R2.gam.baseAge - R2.gam.noF #0.0001164052
+
+R2.mer.nosurv <- 1-var(residuals(drop_surv_ML$mer))/(var(model.response(model.frame(drop_surv_ML$mer))))
+#0.2973227
+R2.gam.nosurv <- 1-var(residuals(drop_surv_ML$gam))/(var(model.response(model.frame(drop_surv_ML$gam))))
+#NA
+
+R2.mer.baseAge - R2.mer.nosurv #0.002313174
+R2.gam.baseAge - R2.gam.nosurv #NA
+
+R2.mer.noapex <- 1-var(residuals(drop_apex_ML$mer))/(var(model.response(model.frame(drop_apex_ML$mer))))
+#0.2969689
+R2.gam.noapex <- 1-var(residuals(drop_apex_ML$gam))/(var(model.response(model.frame(drop_apex_ML$gam))))
+#0.1460608
+
+R2.mer.baseAge - R2.mer.noapex #0.002667034
+R2.gam.baseAge - R2.gam.noapex #-0.0004653798
+
+R2.mer.noforg <- 1-var(residuals(drop_forg_ML$mer))/(var(model.response(model.frame(drop_forg_ML$mer))))
+#0.333672
+R2.gam.noforg <- 1-var(residuals(drop_forg_ML$gam))/(var(model.response(model.frame(drop_forg_ML$gam))))
+#0.1593287
+
+R2.mer.baseAge - R2.mer.noforg #-0.03403613
+R2.gam.baseAge - R2.gam.noforg #-0.0137333
+
+R2.mer.nopelg <- 1-var(residuals(drop_pelg_ML$mer))/(var(model.response(model.frame(drop_pelg_ML$mer))))
+#0.2975568
+R2.gam.nopelg <- 1-var(residuals(drop_pelg_ML$gam))/(var(model.response(model.frame(drop_pelg_ML$gam))))
+#0.142761
+
+R2.mer.baseAge - R2.mer.nopelg #0.002079081
+R2.gam.baseAge - R2.gam.nopelg #0.002834388
+
+
+#how do these compare to no SST?
+
+base_nosst_ML <- gamm4(length_scaled ~ t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                         AGE + s(mean_ann_F3plus_scaled,  by=AGE, k=4) + 
+                         s(pollock_survey_abun_mil_at_age_scaled,  by=AGE, k=4) +
+                         s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                         s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                         s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                         s(cohort, bs="re"),
+                       random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(base_nosst_ML, file=paste(wd,"/scripts/model_output_all-ages_base_nosst.rds", sep=""))
+base_nosst_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_base_nosst.rds", sep=""))
+
+#try also switching to no int, linear int, linear
+
+smsst_ML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                         AGE + s(mean_ann_F3plus_scaled,  by=AGE, k=4) + 
+                         s(pollock_survey_abun_mil_at_age_scaled,  by=AGE, k=4) +
+                         s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                         s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                         s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                         s(cohort, bs="re"),
+                       random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(smsst_ML, file=paste(wd,"/scripts/model_output_all-ages_smsst.rds", sep=""))
+smsst_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_smsst.rds", sep=""))
+
+linintsst_ML <- gamm4(length_scaled ~  south.sst.amj.scaled:AGE + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                         AGE + s(mean_ann_F3plus_scaled,  by=AGE, k=4) + 
+                         s(pollock_survey_abun_mil_at_age_scaled,  by=AGE, k=4) +
+                         s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                         s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                         s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                         s(cohort, bs="re"),
+                       random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(linintsst_ML, file=paste(wd,"/scripts/model_output_all-ages_linintsst.rds", sep=""))
+linintsst_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_base_linintsst.rds", sep=""))
+
+linsst_ML <- gamm4(length_scaled ~  south.sst.amj.scaled + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                        AGE + s(mean_ann_F3plus_scaled,  by=AGE, k=4) + 
+                        s(pollock_survey_abun_mil_at_age_scaled,  by=AGE, k=4) +
+                        s(apex_pred_biom_scaled, by=AGE, k=4) + 
+                        s(forage_fish_biom_scaled, by=AGE, k=4) + 
+                        s(pelagic_forager_biom_scaled, by=AGE, k=4) +
+                        s(cohort, bs="re"),
+                      random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(linsst_ML, file=paste(wd,"/scripts/model_output_all-ages_linsst.rds", sep=""))
+linsst_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_base_linsst.rds", sep=""))
 
 
 #model selection using dredge--------------
