@@ -581,6 +581,31 @@ drop_pelg_ML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2
 saveRDS(drop_pelg_ML, file=paste(wd,"/scripts/model_output_all-ages_drop_pelg.rds", sep=""))
 drop_pelg_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_drop_pelg.rds", sep=""))
 
+AIC(base_w_AGE_ML$mer, drop_F_ML$mer, drop_surv_ML$mer, drop_apex_ML$mer, 
+    drop_forg_ML$mer, drop_pelg_ML$mer, surnolagML$mer, surnonlinML$mer)
+
+anova(base_w_AGE_ML$mer, drop_F_ML$mer, drop_surv_ML$mer, drop_apex_ML$mer, 
+      drop_forg_ML$mer, drop_pelg_ML$mer)
+
+anova(base_w_AGE_ML$mer, drop_F_ML$mer, 
+      drop_surv_ML$mer, 
+      drop_apex_ML$mer, 
+      drop_forg_ML$mer, 
+      drop_pelg_ML$mer) #not fit to same size dataset???
+#I think this is surv and forg being rank def
+
+anova(base_w_AGE_ML$mer, drop_F_ML$mer) #full better by all metrics except BIC
+anova(base_w_AGE_ML$mer, drop_surv_ML$mer) #not fit to same size dataset???
+anova(base_w_AGE_ML$mer, drop_apex_ML$mer) #full better by all metrics except BIC
+anova(base_w_AGE_ML$mer, drop_forg_ML$mer) #not fit to same size dataset???
+anova(base_w_AGE_ML$mer, drop_pelg_ML$mer) #full better by all metrics except BIC
+
+#linear was better than smooth above, how does no term compare to linear?
+anova(drop_F_ML$mer, drop_F_ML$mer) #
+anova(drop_surv_ML$mer, drop_surv_ML$mer) #
+anova(drop_apex_ML$mer, drop_apex_ML$mer) #
+anova(drop_forg_ML$mer, drop_forg_ML$mer) #
+anova(drop_pelg_ML$mer, drop_pelg_ML$mer) #
 
 
 #model selection using dredge--------------
