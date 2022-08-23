@@ -7,6 +7,11 @@
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 library(ggplot2)
+library("rnaturalearth")
+library("rnaturalearthdata")
+library( "ggspatial" )
+library("sf")
+
 
 #get data saved in load_explore_covar_data
 wd <- getwd()
@@ -16,6 +21,18 @@ analysis_dat <- analysis_dat[which(analysis_dat$AGE<11),]
 
 ggplot(analysis_dat, aes(YEAR, mean_annual_size_global)) + 
   geom_point() + facet_wrap(~AGE, scales="free") + geom_smooth()
+
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+ggplot(data = world) +
+  geom_sf() +
+  coord_sf(xlim = c(-178, -155), ylim = c(53, 65), expand = TRUE) +
+  annotation_scale(location = "bl", width_hint = 0.5) +
+  # geom_point(aes(LONGITUDE, LATITUDE, colour=mean_station_bottemp), data=all_analysis_dat) +   
+  # scale_colour_gradient2(low="blue", high="red", guide="colorbar") + 
+  geom_point(aes(LONGITUDE, LATITUDE, 
+                 col=as.factor(STRATUM)), data=analysis_dat) + theme_bw() 
 
 #let's look again at the covariates we selected
 
