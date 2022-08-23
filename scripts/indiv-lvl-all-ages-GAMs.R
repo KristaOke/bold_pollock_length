@@ -178,7 +178,8 @@ allnolagML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(L
                     s(cohort, bs="re"),
                   random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
 #saveRDS(allnolagML, file=paste(wd,"/scripts/model_output_all-ages_lin_interactionsML.rds", sep=""))
-
+allnolagML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_lin_interactionsML.rds", sep=""))
+summary(allnolagML$gam)
 
 allnonlin <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                     s(mean_ann_F3plus_scaled, by=AGE, k=4) + 
@@ -233,8 +234,9 @@ plot_model(surnolag$gam)
 #saveRDS(surnolag, file=paste(wd,"/scripts/model_output_all-ages_lin_interactions_surv-abun.rds", sep=""))
 surnolag <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_lin_interactions_surv-abun.rds", sep=""))
 
-
+#added AGE
 surnolagML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                      AGE +
                       mean_ann_F3plus_scaled:AGE + 
                       pollock_survey_abun_mil_at_age_scaled:AGE +
                       apex_pred_biom_scaled:AGE + 
@@ -307,6 +309,8 @@ linsurvML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LO
                        s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
 saveRDS(linsurvML, file=paste(wd,"/scripts/model_output_all-ages_linearsurvML_surv-abun.rds", sep=""))
+linsurvML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_linearsurvML_surv-abun.rds", sep=""))
+
 
 
 linapexML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
@@ -319,6 +323,7 @@ linapexML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LO
                        s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
 saveRDS(linapexML, file=paste(wd,"/scripts/model_output_all-ages_linearapexML_surv-abun.rds", sep=""))
+linapexML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_linearapexML_surv-abun.rds", sep=""))
 
 
 linforageML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, by=AGE, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
@@ -690,7 +695,7 @@ linintsst_ML <- gamm4(length_scaled ~  south.sst.amj.scaled:AGE + t2(LONGITUDE, 
                          s(cohort, bs="re"),
                        random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
 saveRDS(linintsst_ML, file=paste(wd,"/scripts/model_output_all-ages_linintsst.rds", sep=""))
-linintsst_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_base_linintsst.rds", sep=""))
+linintsst_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_linintsst.rds", sep=""))
 
 linsst_ML <- gamm4(length_scaled ~  south.sst.amj.scaled + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                         AGE + s(mean_ann_F3plus_scaled,  by=AGE, k=4) + 
@@ -701,7 +706,66 @@ linsst_ML <- gamm4(length_scaled ~  south.sst.amj.scaled + t2(LONGITUDE, LATITUD
                         s(cohort, bs="re"),
                       random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
 saveRDS(linsst_ML, file=paste(wd,"/scripts/model_output_all-ages_linsst.rds", sep=""))
-linsst_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_base_linsst.rds", sep=""))
+linsst_ML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_linsst.rds", sep=""))
+
+#running these in R b/c some are too big to load!
+AIC(base_w_AGE_ML$mer, base_nosst_ML$mer, smsst_ML$mer, linintsst_ML$mer, linsst_ML$mer)
+
+AIC(smsst_ML$mer, linintsst_ML$mer, linsst_ML$mer)
+
+# df      AIC
+# smsst_ML$mer     179 114022.2
+# linintsst_ML$mer 192 113884.1
+# linsst_ML$mer    178 114046.7
+
+anova(base_w_AGE_ML$mer, base_nosst_ML$mer, smsst_ML$mer, linintsst_ML$mer, linsst_ML$mer)
+
+anova(base_w_AGE_ML$mer, base_nosst_ML$mer)
+# Data: NULL
+# Models:
+#   base_nosst_ML$mer: NULL
+# base_w_AGE_ML$mer: NULL
+# npar    AIC    BIC logLik deviance  Chisq Df Pr(>Chisq)    
+# base_nosst_ML$mer  177 114046 115593 -56846   113692                         
+# base_w_AGE_ML$mer  207 113870 115680 -56728   113456 235.62 30  < 2.2e-16 ***
+
+#base better except BIC
+
+anova(smsst_ML$mer, linintsst_ML$mer, linsst_ML$mer)
+# Data: NULL
+# Models:
+#   linsst_ML$mer: NULL
+# smsst_ML$mer: NULL
+# linintsst_ML$mer: NULL
+# npar    AIC    BIC logLik deviance   Chisq Df Pr(>Chisq)    
+# linsst_ML$mer     178 114047 115603 -56845   113691                          
+# smsst_ML$mer      179 114022 115587 -56832   113664  26.472  1  2.674e-07 ***
+#   linintsst_ML$mer  192 113884 115563 -56750   113500 164.116 13  < 2.2e-16 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+anova(base_w_AGE_ML$mer, base_nosst_ML$mer) #
+anova(base_w_AGE_ML$mer, smsst_ML$mer) #
+anova(base_w_AGE_ML$mer, linintsst_ML$mer) #
+anova(base_w_AGE_ML$mer, linsst_ML$mer) #
+
+
+R2.mer.noSST <- 1-var(residuals(base_nosst_ML$mer))/(var(model.response(model.frame(base_nosst_ML$mer)))) 
+#0.2966198
+R2.gam.noSST <- 1-var(residuals(base_nosst_ML$gam))/(var(model.response(model.frame(base_nosst_ML$gam)))) 
+#0.1316205
+
+R2.mer.baseAge - R2.mer.noSST #0.003016076
+R2.gam.baseAge - R2.gam.noSST #0.01397495
+
+null_nocovarsML <- gamm4(length_scaled ~   t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       AGE +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL), data=scaled_dat, REML=FALSE )
+saveRDS(null_nocovarsML, file=paste(wd,"/scripts/model_output_all-ages_nocovars.rds", sep=""))
+null_nocovarsML <- readRDS(file=paste(wd,"/scripts/model_output_all-ages_nocovars.rds", sep=""))
+
 
 
 #model selection using dredge--------------
