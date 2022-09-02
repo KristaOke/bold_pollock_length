@@ -112,9 +112,9 @@ Fdat_single <- Fdat[,c("year", "N1", "N2", "N3", "N4", "N5", "N6", "N7", "N8", "
                        "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9",
                        "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9")]
 
-Fdat_double <- Fdat[,c("year", "N11", "N12", "N13", "N14", "N15", 
-                       "C11", "C12", "C13", "C14", "C15", 
-                       "F11", "F12", "F13", "F14", "F15")]
+Fdat_double <- Fdat[,c("year", "N10", "N11", "N12", "N13", "N14", "N15", 
+                       "C10", "C11", "C12", "C13", "C14", "C15", 
+                       "F10", "F11", "F12", "F13", "F14", "F15")]
 
 piv1_9 <- Fdat_single %>%
   pivot_longer(!year, names_to = c(".value", "age"),
@@ -144,6 +144,7 @@ lagged_dat4join$prevage <- as.numeric(as.character(lagged_dat4join$AGE)) - 1
 
 lagged2prev <- left_join(lagged_dat4join, Fdatlong_prevjoin[,c(1:2,6)], by=c("prevyr"="year", "prevage"="age"))
 #yes working correctly
+
 
 #save
 wd <- getwd()
