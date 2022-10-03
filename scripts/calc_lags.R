@@ -131,6 +131,11 @@ Fdatlong$age <- as.integer(Fdatlong$age)
 
 Fdatlong_prevjoin <- Fdatlong
 
+#save
+wd <- getwd()
+write.csv(Fdatlong, file=paste(wd,"/data/Fdatlong.csv", sep=""))
+
+
 #create lagged year column and use to join
 
 Fdatlong_prevjoin$prevyr_prevage_F <- Fdatlong_prevjoin$F
