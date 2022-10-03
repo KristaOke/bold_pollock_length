@@ -95,9 +95,44 @@ scaled_prev$cohort <- as.factor(scaled_prev$cohort)
 
 scaled_prev$min_parent_yr <- as.numeric(as.character(scaled_prev$cohort)) - 3
 
+#get data
 mass_at_age <- read.csv(file=paste(wd,"/data/2021_assessment_table1-17_EBS_pollock_mass_kg_at_age.csv", sep="")) #from survey
 
 mil_at_age <- read.csv(file=paste(wd,"/data/estimated_billions_pollock_at_age_from_assmodel_table1-28_2021assessment.csv", 
                                   sep=""))
+p_m <- read.csv(file=paste(wd,"/data/2021-09-30_table_p23_2021assessment_Pmat_M.csv", 
+                                  sep=""))
 
+#rotate long
+long_mass <- mass_at_age %>%
+  pivot_longer(cols = starts_with("age"), names_to = "Age", values_to = "mass_at_age")
 
+long_mass$Age <- gsub("age", "", long_mass$Age)
+
+long_mil <- mil_at_age %>%
+  pivot_longer(cols = starts_with("age"), names_to = "Age", values_to = "mil_at_age")
+
+long_mil$Age <- gsub("age", "", long_mil$Age)
+
+#join data by year
+mass_mil <- left_join(long_mass, long_mil)
+
+p_m$Age <- as.character(p_m$Age)
+
+spawners_dat <- left_join(mass_mil, p_m)
+
+spawners_dat$N_at_age <- spawners_dat$mil_at_age*1000000
+
+spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at_age
+  
+  ggplot(spawners_dat, aes(as.numeric(as.character(Age)), SPa)) + geom_point() + facet_wrap(~Year)
+
+#get proportion of total up to age 10 in each age class
+  
+  yrly_sum <- spawners_dat %>% group_by(Year) %>%
+    summarize(annual_sum_N = sum(N_at_age, na.rm=TRUE))
+    
+  spawners_dat <- left_join(spawners_dat, yrly_sum)
+
+  spawners_dat$prop_N_age <- spawners_dat$N_at_age/spawners_dat$annual_sum_N  
+  
