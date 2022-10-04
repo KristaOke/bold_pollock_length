@@ -93,7 +93,7 @@ scaled_prev$cohort <- as.factor(scaled_prev$cohort)
 
 #----
 
-scaled_prev$min_parent_yr <- as.numeric(as.character(scaled_prev$cohort)) - 3
+#scaled_prev$min_parent_yr <- as.numeric(as.character(scaled_prev$cohort)) - 3
 
 #get data
 mass_at_age <- read.csv(file=paste(wd,"/data/2021_assessment_table1-17_EBS_pollock_mass_kg_at_age.csv", sep="")) #from survey
@@ -161,7 +161,7 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
     as.numeric(as.character(ages_10percent_SPa$Age))  
   ages_10percent_SPa$cohort <- as.factor(ages_10percent_SPa$cohort)
   
-  ggplot(ages_10percent_SPa, aes(as.numeric(as.character(Age)), Year, col=cohort)) + geom_point() +
+  ggplot(ages_10percent_SPa, aes(as.numeric(as.character(Age)), Year, col=as.factor(cohort))) + geom_point() +
     scale_colour_manual(values = c("red", "blue", "green", "black", "pink", "brown", "yellow", "grey", "orange",
                                    "dark blue", "dark red", "dark grey", "dark green", #repeat
                                    "red", "blue", "green", "black", "pink", "brown", "yellow", "grey", "orange",
@@ -200,7 +200,7 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
   ages_10percent_SPa$mean_to_date_cohort_mature_F <- NA
   
   i<-1
-  for(i in 1:length(ages_10percent_SPa$Year)){ #for each line of ages_10percent_SPa figure out previous Fs
+  for(i in 1:length(ages_10percent_SPa$Year)){ #for each line of ages_10percent_SPa figure out previous Fs above age 2
     temp_cohort <- ages_10percent_SPa$cohort[i]
     temp_age <- ages_10percent_SPa$Age[i]
     cohort_Fdat <- Fdatlong[which(Fdatlong$cohort==temp_cohort),]
@@ -208,20 +208,28 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
     mean_to_date_mature_F <- mean(temp_window$F, na.rm=TRUE)
     ages_10percent_SPa$mean_to_date_cohort_mature_F[i] <- mean_to_date_mature_F
   }
-  
-  
-  #FIX THIS JOIN - need F for cohorts first?
-  join4weighing <- left_join(ages_10percent_SPa, Fdatlong, by=c("Year"="year",
-                                                                "Age"="age",
-                                                                "cohort"="cohort")) #need to think about this
-  #do I actually want them joined by age/year? I think the link may instead be cohort?
+  #know we know what F they've experienced, so let's get weighted avg of those Fs based on propotions
   
   #join first then
- mean_parent_Fs <-join4weighing %>% group_by(Year) #ok who to group by here is very important and hard
+ mean_parent_Fs <- ages_10percent_SPa %>% group_by(Year) %>%
+   summarize(weighted_parent_mean_F  = weighted.mean(x=mean_to_date_cohort_mature_F, w=prop_SPa_age, na.rm=TRUE))
+ #ok who to group by here is very important
+ #currently because I'm grouping by year (here and above) I will have the mean F the parents present in a year
+ #have experienced - that still needs to be linked back to the offspring
    
-   weighted.mean(x=, w=, na.rm=TRUE)
+  ggplot(mean_parent_Fs, aes(Year, weighted_parent_mean_F)) + geom_point() #gut check this
+  
+  #then link offspring cohort to year???? ie 2000 parent weighted F linked to fish born in 2000
+  
+   
+  mean_parent_Fs$Year <- as.factor(mean_parent_Fs$Year)
+  
+  #join COHORT in scaled data to YEAR in mean parent Fs 
+  
+  datwparents <- left_join(scaled_prev, mean_parent_Fs, by=c("cohort"="Year"))
+  
+  wd <- getwd()
+  write.csv(datwparents, file=paste(wd,"/data/analysis_ready_data_w_mean_parent_Fs.csv", sep=""))
   
   
-  
-    
   
