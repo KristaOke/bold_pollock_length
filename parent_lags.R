@@ -135,4 +135,93 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
   spawners_dat <- left_join(spawners_dat, yrly_sum)
 
   spawners_dat$prop_N_age <- spawners_dat$N_at_age/spawners_dat$annual_sum_N  
+
+  #repeat with SPa instead of N
+  
+  yrly_sum_SPa <- spawners_dat %>% group_by(Year) %>%
+    summarize(annual_sum_SPa = sum(SPa, na.rm=TRUE))
+  
+  spawners_dat <- left_join(spawners_dat, yrly_sum_SPa)
+  
+  spawners_dat$prop_SPa_age <- spawners_dat$SPa/spawners_dat$annual_sum_SPa  
+  
+  ggplot(spawners_dat, aes(as.numeric(as.character(Age)), prop_SPa_age)) + geom_point() + facet_wrap(~Year)
+  
+  
+#retain age classes with proportion of SPa GREATER THAN 0.10
+  
+  ages_10percent_SPa <- spawners_dat[which(spawners_dat$prop_SPa_age > 0.10),]
+  
+  ggplot(ages_10percent_SPa, aes(as.numeric(as.character(Age)), prop_SPa_age)) + geom_point() + facet_wrap(~Year)
+
+  #let's colour the cohorts and look at how many years they are likely to contribute
+  #colours don't mean anything just want nice contrast to track cohorts visually
+
+  ages_10percent_SPa$cohort <- as.numeric(as.character(ages_10percent_SPa$Year)) - 
+    as.numeric(as.character(ages_10percent_SPa$Age))  
+  ages_10percent_SPa$cohort <- as.factor(ages_10percent_SPa$cohort)
+  
+  ggplot(ages_10percent_SPa, aes(as.numeric(as.character(Age)), Year, col=cohort)) + geom_point() +
+    scale_colour_manual(values = c("red", "blue", "green", "black", "pink", "brown", "yellow", "grey", "orange",
+                                   "dark blue", "dark red", "dark grey", "dark green", #repeat
+                                   "red", "blue", "green", "black", "pink", "brown", "yellow", "grey", "orange",
+                                   "dark blue", "dark red", "dark grey", "dark green", #repeat
+                                   "red", "blue", "green", "black", "pink", "brown", "yellow", "grey", "orange",
+                                   "dark blue", "dark red", "dark grey", "dark green"))
+  
+#now we know who likely parents are, need to link to fishing on those years/cohorts
+  
+  #fishing data
+  
+  wd <- getwd()
+  Fdatlong <- read.csv(file=paste(wd,"/data/Fdatlong.csv", sep=""), row.names=1)
+  
+  #get cohort from Fdat
+  Fdatlong$cohort <- Fdatlong$year - Fdatlong$age
+  
+#look at Fs cohorts were exposed to?
+  ggplot(Fdatlong, aes(year, F)) + geom_point() + facet_wrap(~cohort)
+  
+
+#ok we have F for years/cohorts - now need a weighted avg  
+  
+  ages_10percent_SPa$Age <- as.numeric(as.character(ages_10percent_SPa$Age))
+  ages_10percent_SPa$cohort <- as.numeric(as.character(ages_10percent_SPa$cohort))
+  
+  #what we need is 
+  #for each cohort
+  #F for years LESS THAN EQUAL TO AGE
+  #BUT only ages 3+ (?)
+  #think we want MEAN of above
+  #then weight mean of mean F for each cohort weighted by proportion SPa?
+  
+  #seems like a loop is needed
+  
+  ages_10percent_SPa$mean_to_date_cohort_mature_F <- NA
+  
+  i<-1
+  for(i in 1:length(ages_10percent_SPa$Year)){ #for each line of ages_10percent_SPa figure out previous Fs
+    temp_cohort <- ages_10percent_SPa$cohort[i]
+    temp_age <- ages_10percent_SPa$Age[i]
+    cohort_Fdat <- Fdatlong[which(Fdatlong$cohort==temp_cohort),]
+    temp_window <- cohort_Fdat[which(cohort_Fdat$age>2 & cohort_Fdat$age<=temp_age),]
+    mean_to_date_mature_F <- mean(temp_window$F, na.rm=TRUE)
+    ages_10percent_SPa$mean_to_date_cohort_mature_F[i] <- mean_to_date_mature_F
+  }
+  
+  
+  #FIX THIS JOIN - need F for cohorts first?
+  join4weighing <- left_join(ages_10percent_SPa, Fdatlong, by=c("Year"="year",
+                                                                "Age"="age",
+                                                                "cohort"="cohort")) #need to think about this
+  #do I actually want them joined by age/year? I think the link may instead be cohort?
+  
+  #join first then
+ mean_parent_Fs <-join4weighing %>% group_by(Year) #ok who to group by here is very important and hard
+   
+   weighted.mean(x=, w=, na.rm=TRUE)
+  
+  
+  
+    
   
