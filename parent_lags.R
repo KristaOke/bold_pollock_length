@@ -228,6 +228,13 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
   
   datwparents <- left_join(scaled_prev, mean_parent_Fs, by=c("cohort"="Year"))
   
+  #z-score variables of interest BY AGE
+  
+  partbl <- datwparents %>% group_by(AGE) %>%
+    mutate(mean_weight_parentF_scaled=scale(weighted_parent_mean_F))
+  
+  datwparents <- as.data.frame(partbl)
+  
   wd <- getwd()
   write.csv(datwparents, file=paste(wd,"/data/analysis_ready_data_w_mean_parent_Fs.csv", sep=""))
   
