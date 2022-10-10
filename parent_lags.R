@@ -217,7 +217,11 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
  #currently because I'm grouping by year (here and above) I will have the mean F the parents present in a year
  #have experienced - that still needs to be linked back to the offspring
    
-  ggplot(mean_parent_Fs, aes(Year, weighted_parent_mean_F)) + geom_point() #gut check this
+  ggplot(mean_parent_Fs, aes(Year, weighted_parent_mean_F)) + geom_point() + geom_line() #gut check this
+  
+  ggplot(mean_parent_Fs, aes(as.numeric(as.character(Year)), weighted_parent_mean_F)) + geom_point() + 
+    geom_line() + xlab("Year") + ylab("Weighted mean parent F")#gut check this
+  
   
   #then link offspring cohort to year???? ie 2000 parent weighted F linked to fish born in 2000
   
