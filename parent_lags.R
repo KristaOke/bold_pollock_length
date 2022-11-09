@@ -11,6 +11,8 @@ library("rnaturalearth")
 library("rnaturalearthdata")
 library( "ggspatial" )
 library("sf")
+library(readxl)
+library(ggridges)
 
 #data
 wd <- getwd()
@@ -91,6 +93,25 @@ scaled_prev <- as.data.frame(scaledprevtbl)
 
 scaled_prev$cohort <- as.factor(scaled_prev$cohort)
 
+#read in selectivity data===========
+
+selgrid <- read_excel(paste(wd,"/data/Selgrid.xlsx", sep=""),
+                      sheet="Sheet3",
+                      range="A1:P58")
+
+selgrid <- selgrid %>% rename(Year=sel_fsh)
+
+sellong <- selgrid %>% pivot_longer(!Year, names_to = "age", values_to = "sel")
+
+sellong$age <- as.numeric(sellong$age)
+sellong_sub <- sellong[which(sellong$Year>1976),]
+sellong$Year <- as.factor(sellong$Year)
+sellong_sub$Year <- as.factor(sellong_sub$Year)
+
+ggplot(sellong_sub, aes(x=age, y=Year, height=sel)) +
+  geom_density_ridges(stat="identity", scale=3, alpha=0.5, color="black") +
+  ylab("Year") + xlab("Age (years)")
+
 #----
 
 #scaled_prev$min_parent_yr <- as.numeric(as.character(scaled_prev$cohort)) - 3
@@ -114,6 +135,8 @@ long_mil <- mil_at_age %>%
 
 long_mil$Age <- gsub("age", "", long_mil$Age)
 
+ggplot(long_mil, aes(Age)) + geom_histogram() + facet_wrap(~Year)
+
 #join data by year
 mass_mil <- left_join(long_mass, long_mil)
 
@@ -136,6 +159,15 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
 
   spawners_dat$prop_N_age <- spawners_dat$N_at_age/spawners_dat$annual_sum_N  
 
+  ggplot(spawners_dat[which(spawners_dat$Age!="10"&
+                              spawners_dat$Age!="11"&
+                              spawners_dat$Age!="12"&
+                              spawners_dat$Age!="13"&
+                              spawners_dat$Age!="14"&
+                              spawners_dat$Age!="15"&
+                              spawners_dat$Age!="15plus"&
+                              spawners_dat$Age!="10plus"),], aes(Age, prop_N_age)) + geom_point() + facet_wrap(~Year)
+  
   #repeat with SPa instead of N
   
   yrly_sum_SPa <- spawners_dat %>% group_by(Year) %>%
@@ -150,18 +182,18 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
   
 #retain age classes with proportion of SPa GREATER THAN 0.10
   
-  ages_10percent_SPa <- spawners_dat[which(spawners_dat$prop_SPa_age > 0.10),]
+#  ages_10percent_SPa <- spawners_dat[which(spawners_dat$prop_SPa_age > 0.10),]
   
-  ggplot(ages_10percent_SPa, aes(as.numeric(as.character(Age)), prop_SPa_age)) + geom_point() + facet_wrap(~Year)
+  ggplot(spawners_dat, aes(as.numeric(as.character(Age)), prop_SPa_age)) + geom_point() + facet_wrap(~Year)
 
   #let's colour the cohorts and look at how many years they are likely to contribute
   #colours don't mean anything just want nice contrast to track cohorts visually
 
-  ages_10percent_SPa$cohort <- as.numeric(as.character(ages_10percent_SPa$Year)) - 
-    as.numeric(as.character(ages_10percent_SPa$Age))  
-  ages_10percent_SPa$cohort <- as.factor(ages_10percent_SPa$cohort)
+  spawners_dat$cohort <- as.numeric(as.character(spawners_dat$Year)) - 
+    as.numeric(as.character(spawners_dat$Age))  
+  spawners_dat$cohort <- as.factor(spawners_dat$cohort)
   
-  ggplot(ages_10percent_SPa, aes(as.numeric(as.character(Age)), Year, col=as.factor(cohort))) + geom_point() +
+  ggplot(spawners_dat, aes(as.numeric(as.character(Age)), Year, col=as.factor(cohort))) + geom_point() +
     scale_colour_manual(values = c("red", "blue", "green", "black", "pink", "brown", "yellow", "grey", "orange",
                                    "dark blue", "dark red", "dark grey", "dark green", #repeat
                                    "red", "blue", "green", "black", "pink", "brown", "yellow", "grey", "orange",
@@ -185,8 +217,8 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
 
 #ok we have F for years/cohorts - now need a weighted avg  
   
-  ages_10percent_SPa$Age <- as.numeric(as.character(ages_10percent_SPa$Age))
-  ages_10percent_SPa$cohort <- as.numeric(as.character(ages_10percent_SPa$cohort))
+  spawners_dat$Age <- as.numeric(as.character(spawners_dat$Age))
+  spawners_dat$cohort <- as.numeric(as.character(spawners_dat$cohort))
   
   #what we need is 
   #for each cohort
@@ -197,25 +229,27 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
   
   #seems like a loop is needed
   
-  ages_10percent_SPa$mean_to_date_cohort_mature_F <- NA
+  spawners_dat$mean_to_date_cohort_mature_F <- NA
   
   i<-1
-  for(i in 1:length(ages_10percent_SPa$Year)){ #for each line of ages_10percent_SPa figure out previous Fs above age 2
-    temp_cohort <- ages_10percent_SPa$cohort[i]
-    temp_age <- ages_10percent_SPa$Age[i]
+  for(i in 1:length(spawners_dat$Year)){ #for each line of spawners_dat figure out previous Fs above age 2
+    temp_cohort <- spawners_dat$cohort[i]
+    temp_age <- spawners_dat$Age[i]
     cohort_Fdat <- Fdatlong[which(Fdatlong$cohort==temp_cohort),]
     temp_window <- cohort_Fdat[which(cohort_Fdat$age>2 & cohort_Fdat$age<=temp_age),]
     mean_to_date_mature_F <- mean(temp_window$F, na.rm=TRUE)
-    ages_10percent_SPa$mean_to_date_cohort_mature_F[i] <- mean_to_date_mature_F
+    spawners_dat$mean_to_date_cohort_mature_F[i] <- mean_to_date_mature_F
   }
   #know we know what F they've experienced, so let's get weighted avg of those Fs based on propotions
   
   #join first then
- mean_parent_Fs <- ages_10percent_SPa %>% group_by(Year) %>%
+ mean_parent_Fs <- spawners_dat %>% group_by(Year) %>%
    summarize(weighted_parent_mean_F  = weighted.mean(x=mean_to_date_cohort_mature_F, w=prop_SPa_age, na.rm=TRUE))
  #ok who to group by here is very important
  #currently because I'm grouping by year (here and above) I will have the mean F the parents present in a year
  #have experienced - that still needs to be linked back to the offspring
+ 
+ #ABOVE IS WHERE TO ADD SELECTIVITIES
    
   ggplot(mean_parent_Fs, aes(Year, weighted_parent_mean_F)) + geom_point() + geom_line() #gut check this
   
