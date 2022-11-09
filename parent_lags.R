@@ -250,8 +250,16 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
  #have experienced - that still needs to be linked back to the offspring
  
  #ABOVE IS WHERE TO ADD SELECTIVITIES
+ sellong$Year <- as.numeric(as.character( sellong$Year))
+ #join spawners_dat to selectivities 
+ spawners_dat <- left_join(spawners_dat, sellong, by=c("Year"="Year", "Age"="age"))
    
-  ggplot(mean_parent_Fs, aes(Year, weighted_parent_mean_F)) + geom_point() + geom_line() #gut check this
+ mean_parent_Fs <- spawners_dat %>% group_by(Year) %>%
+   summarize(weighted_parent_mean_F  = weighted.mean(x=mean_to_date_cohort_mature_F, w=(prop_SPa_age*sel), na.rm=TRUE))
+ #doublecheck this on wednesday
+ 
+ 
+ ggplot(mean_parent_Fs, aes(Year, weighted_parent_mean_F)) + geom_point() + geom_line() #gut check this
   
   ggplot(mean_parent_Fs, aes(as.numeric(as.character(Year)), weighted_parent_mean_F)) + geom_point() + 
     geom_line() + xlab("Year") + ylab("Weighted mean parent F")#gut check this
