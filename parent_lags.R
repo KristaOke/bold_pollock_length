@@ -253,10 +253,16 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
  sellong$Year <- as.numeric(as.character( sellong$Year))
  #join spawners_dat to selectivities 
  spawners_dat <- left_join(spawners_dat, sellong, by=c("Year"="Year", "Age"="age"))
+ 
+ spawners_dat$prop_SPa_age_x_sel <-  spawners_dat$prop_SPa_age*spawners_dat$sel
+ 
+ #A lot of NAs b/c not all ages have N_at_age, lets remove them and see if it helps
+ 
+ spawners_dat <- spawners_dat[which(is.na(spawners_dat$N_at_age)==FALSE),]
    
  mean_parent_Fs <- spawners_dat %>% group_by(Year) %>%
-   summarize(weighted_parent_mean_F  = weighted.mean(x=mean_to_date_cohort_mature_F, w=(prop_SPa_age*sel), na.rm=TRUE))
- #doublecheck this on wednesday
+   summarize(weighted_parent_mean_F  = weighted.mean(x=mean_to_date_cohort_mature_F, w=(prop_SPa_age_x_sel), na.rm=TRUE))
+ #not working right
  
  
  ggplot(mean_parent_Fs, aes(Year, weighted_parent_mean_F)) + geom_point() + geom_line() #gut check this
