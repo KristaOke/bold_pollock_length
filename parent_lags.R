@@ -95,22 +95,22 @@ scaled_prev$cohort <- as.factor(scaled_prev$cohort)
 
 #read in selectivity data===========
 
-selgrid <- read_excel(paste(wd,"/data/Selgrid.xlsx", sep=""),
-                      sheet="Sheet3",
-                      range="A1:P58")
+# selgrid <- read_excel(paste(wd,"/data/Selgrid.xlsx", sep=""),
+#                       sheet="Sheet3",
+#                       range="A1:P58")
+# 
+# selgrid <- selgrid %>% rename(Year=sel_fsh)
+# 
+# sellong <- selgrid %>% pivot_longer(!Year, names_to = "age", values_to = "sel")
+# 
+# sellong$age <- as.numeric(sellong$age)
+# sellong_sub <- sellong[which(sellong$Year>1976),]
+# sellong$Year <- as.factor(sellong$Year)
+# sellong_sub$Year <- as.factor(sellong_sub$Year)
 
-selgrid <- selgrid %>% rename(Year=sel_fsh)
-
-sellong <- selgrid %>% pivot_longer(!Year, names_to = "age", values_to = "sel")
-
-sellong$age <- as.numeric(sellong$age)
-sellong_sub <- sellong[which(sellong$Year>1976),]
-sellong$Year <- as.factor(sellong$Year)
-sellong_sub$Year <- as.factor(sellong_sub$Year)
-
-ggplot(sellong_sub, aes(x=age, y=Year, height=sel)) +
-  geom_density_ridges(stat="identity", scale=3, alpha=0.5, color="black") +
-  ylab("Year") + xlab("Age (years)")
+# ggplot(sellong_sub, aes(x=age, y=Year, height=sel)) +
+#   geom_density_ridges(stat="identity", scale=3, alpha=0.5, color="black") +
+#   ylab("Year") + xlab("Age (years)")
 
 #----
 
@@ -240,7 +240,7 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
     mean_to_date_mature_F <- mean(temp_window$F, na.rm=TRUE)
     spawners_dat$mean_to_date_cohort_mature_F[i] <- mean_to_date_mature_F
   }
-  #know we know what F they've experienced, so let's get weighted avg of those Fs based on propotions
+  #now we know what F they've experienced, so let's get weighted avg of those Fs based on propotions
   
   #join first then
  mean_parent_Fs <- spawners_dat %>% group_by(Year) %>%
@@ -249,20 +249,20 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
  #currently because I'm grouping by year (here and above) I will have the mean F the parents present in a year
  #have experienced - that still needs to be linked back to the offspring
  
- #ABOVE IS WHERE TO ADD SELECTIVITIES
- sellong$Year <- as.numeric(as.character( sellong$Year))
+ # SELECTIVITIES - no long do this, left code here commented out for now
+ #sellong$Year <- as.numeric(as.character( sellong$Year))
  #join spawners_dat to selectivities 
- spawners_dat <- left_join(spawners_dat, sellong, by=c("Year"="Year", "Age"="age"))
+ #spawners_dat <- left_join(spawners_dat, sellong, by=c("Year"="Year", "Age"="age"))
  
- spawners_dat$prop_SPa_age_x_sel <-  spawners_dat$prop_SPa_age*spawners_dat$sel
+ #spawners_dat$prop_SPa_age_x_sel <-  spawners_dat$prop_SPa_age*spawners_dat$sel
  
  #A lot of NAs b/c not all ages have N_at_age, lets remove them and see if it helps
  
  spawners_dat <- spawners_dat[which(is.na(spawners_dat$N_at_age)==FALSE),]
    
  mean_parent_Fs <- spawners_dat %>% group_by(Year) %>%
-   summarize(weighted_parent_mean_F  = weighted.mean(x=mean_to_date_cohort_mature_F, w=(prop_SPa_age_x_sel), na.rm=TRUE))
- #not working right
+   summarize(weighted_parent_mean_F  = weighted.mean(x=mean_to_date_cohort_mature_F, w=(prop_SPa_age), na.rm=TRUE))
+ #removed selectivities here, do not need
  
  
  ggplot(mean_parent_Fs, aes(Year, weighted_parent_mean_F)) + geom_point() + geom_line() #gut check this
