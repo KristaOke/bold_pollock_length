@@ -38,8 +38,8 @@ library(corrplot)
 
 
 names(datwparents)
-pairs(datwparents[,c(33, 49, 54)]) #F covars
-cormatt <- cor(datwparents[,c(33, 49, 54)], use="complete.obs")
+pairs(datwparents[,c(33, 49, 53)]) #F covars
+cormatt <- cor(datwparents[,c(33, 49, 53)], use="complete.obs")
 corrplot.mixed(cormatt, upper = 'ellipse',lower='number') #NOT very correlated! None more than 0.14
 
 ggplot(datwparents, aes(mean_weight_parentF_scaled, prevyr_prevage_F_scaled)) + geom_point() + facet_wrap(~AGE) +
@@ -51,7 +51,7 @@ ggplot(datwparents, aes(mean_weight_parentF_scaled, mean_ann_F3plus_scaled)) + g
 ggplot(datwparents, aes(mean_ann_F3plus_scaled, prevyr_prevage_F_scaled)) + geom_point() + facet_wrap(~AGE) +
   geom_smooth(method="lm") #LOOKS correlated under age 11?
 
-cormatyoung <- cor(datwparents[which(datwparents$AGE<10),c(33, 49, 54)], use="complete.obs")
+cormatyoung <- cor(datwparents[which(datwparents$AGE<10),c(33, 49, 53)], use="complete.obs")
 corrplot.mixed(cormatyoung, upper = 'ellipse',lower='number') #still not very correlated? None more than 0.23
 
 #how correlated is F and SST?!
@@ -72,6 +72,17 @@ ggplot(datwparents, aes(prevyr_prevage_F_scaled, south.sst.amj.scaled)) + geom_p
 ggplot(datwparents, aes(mean_ann_F3plus_scaled, south.sst.amj.scaled)) + geom_point() + facet_wrap(~AGE) +
   geom_smooth(method="lm") #high Fs during cold temps
 
+#look at new covar
+ggplot(datwparents, aes(mean_weight_parentF_scaled, length_scaled)) + geom_point() + facet_wrap(~AGE, scales="free") +
+  geom_smooth(method="lm") #
+
+mean_lengths <- datwparents %>% group_by(YEAR, AGE) %>%
+  summarise(mean_ann_length=mean(LENGTH, na.rm=TRUE))
+
+mean_len_join <- left_join(datwparents, mean_lengths)
+
+ggplot(mean_len_join, aes(mean_weight_parentF_scaled, mean_ann_length, col=south.sst.amj.scaled)) + geom_point() + facet_wrap(~AGE, scales="free_y") +
+  geom_smooth(method="lm") + scale_colour_gradient(low = "blue", high = "red")
 
 #GAMs w prev yr prev age AND mean parent F-----
 
@@ -618,357 +629,538 @@ ggplot(lag15par, aes(mean_weight_parentF_scaled, LENGTH)) + geom_point() + geom_
 
 
 
-#with temp x F interactions----------------------------------------------------------------------------------------
+#again w REML----------------------------------------------------------------------------------------
 
-#not sure below makes any sense so commenting it out for now
+#
+#age 1------
 
-# #age 1------
-# 
-# #prev yr prev age does NOT work for age 1 so drop
-# lag1.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                      mean_weight_parentF_scaled + mean_weight_parentF_scaled:south.sst.amj.scaled + 
-#                       # prevyr_prevage_F_scaled +
-#                       pollock_survey_abun_mil_at_age_scaled +
-#                       apex_pred_biom_scaled + 
-#                       forage_fish_biom_scaled + 
-#                       pelagic_forager_biom_scaled +
-#                       s(cohort, bs="re"),
-#                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag1par )
-# gam.check(lag1.intF$gam) #not bad
-# summary(lag1.intF$gam) #
-# summary(lag1.intF$mer) #
-# AIC_1lagintF <- AIC(lag1.intF$mer) #
-# plot(lag1.intF$gam)
-# 
-# AIC_1lagintF
-# AIC_1lagbothF #basically same, int not sig
-# 
-# lag1.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                      mean_weight_parentF_scaled + #mean_weight_parentF_scaled:south.sst.amj.scaled + 
-#                      # prevyr_prevage_F_scaled +
-#                      pollock_survey_abun_mil_at_age_scaled +
-#                      apex_pred_biom_scaled + 
-#                      forage_fish_biom_scaled + 
-#                      pelagic_forager_biom_scaled +
-#                      s(cohort, bs="re"),
-#                    random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag1par )
-# gam.check(lag1.bothF$gam) #not bad
-# summary(lag1.bothF$gam)
-# 
-# 
-# 
-# #age 2------
-# 
-# lag2.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                       mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                       prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                       pollock_survey_abun_mil_at_age_scaled +
-#                       apex_pred_biom_scaled + 
-#                       forage_fish_biom_scaled + 
-#                       pelagic_forager_biom_scaled +
-#                       s(cohort, bs="re"),
-#                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag2par ) #interactions aren't significant
-# gam.check(lag2.intF$gam) #not bad
-# summary(lag2.intF$gam) #
-# summary(lag2.intF$mer) #
-# AIC_2lagintF <- AIC(lag2.intF$mer) #
-# plot(lag2.intF$gam)
-# 
-# AIC(lag2.bothF$mer, lag2.intF$mer) #int maybe slightly better (delta 4) but maybe not given extra df (2)
-# 
-# 
-# 
-# 
-# 
-# 
-# #age 3------
-# 
-# lag3.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                       mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                       prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                       pollock_survey_abun_mil_at_age_scaled +
-#                       apex_pred_biom_scaled + 
-#                       forage_fish_biom_scaled + 
-#                       pelagic_forager_biom_scaled +
-#                       s(cohort, bs="re"),
-#                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag3par ) #interactions not sig
-# gam.check(lag3.intF$gam) #not bad
-# summary(lag3.intF$gam) #
-# summary(lag3.intF$mer) #
-# AIC_3lagintF <- AIC(lag3.intF$mer) #
-# plot(lag3.intF$gam)
-# 
-# AIC(lag3.bothF$mer, lag3.intF$mer) #same
-# 
-# 
-# 
-# 
-# #age 4------
-# 
-# lag4.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                       mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                       prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                       pollock_survey_abun_mil_at_age_scaled +
-#                       apex_pred_biom_scaled + 
-#                       forage_fish_biom_scaled + 
-#                       pelagic_forager_biom_scaled +
-#                       s(cohort, bs="re"),
-#                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag4par ) #interactions ARE significant
-# gam.check(lag4.intF$gam) #not bad
-# summary(lag4.intF$gam) #
-# summary(lag4.intF$mer) #
-# AIC_4lagintF <- AIC(lag4.intF$mer) #
-# plot(lag4.intF$gam)
-# 
-# AIC(lag4.bothF$mer, lag4.intF$mer) #9 lower w interactions
-# 
-# 
-# 
-# 
-# 
-# 
-# #age 5------
-# 
-# lag5.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                       mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                       prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                       pollock_survey_abun_mil_at_age_scaled +
-#                       apex_pred_biom_scaled + 
-#                       forage_fish_biom_scaled + 
-#                       pelagic_forager_biom_scaled +
-#                       s(cohort, bs="re"),
-#                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag5par ) #interactions are sig
-# gam.check(lag5.intF$gam) #not bad
-# summary(lag5.intF$gam) #
-# summary(lag5.intF$mer) #
-# AIC_5lagintF <- AIC(lag5.intF$mer) #
-# plot(lag5.intF$gam)
-# 
-# AIC(lag5.bothF$mer, lag5.intF$mer) #int is 28 lower
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# #age 6------
-# 
-# lag6.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                       mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                       prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                       pollock_survey_abun_mil_at_age_scaled +
-#                       apex_pred_biom_scaled + 
-#                       forage_fish_biom_scaled + 
-#                       pelagic_forager_biom_scaled +
-#                       s(cohort, bs="re"),
-#                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag6par ) #interactions not sig
-# gam.check(lag6.intF$gam) #not bad
-# summary(lag6.intF$gam) #
-# summary(lag6.intF$mer) #
-# AIC_6lagintF <- AIC(lag6.intF$mer) #
-# plot(lag6.intF$gam)
-# 
-# AIC(lag6.bothF$mer, lag6.intF$mer) #int 10 less
-# 
-# 
-# 
-# 
-# 
-# 
-# #age 7------
-# 
-# lag7.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                       mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                       prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                       pollock_survey_abun_mil_at_age_scaled +
-#                       apex_pred_biom_scaled + 
-#                       forage_fish_biom_scaled + 
-#                       pelagic_forager_biom_scaled +
-#                       s(cohort, bs="re"),
-#                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag7par ) #one int sig
-# gam.check(lag7.intF$gam) #not bad
-# summary(lag7.intF$gam) #
-# summary(lag7.intF$mer) #
-# AIC_7lagintF <- AIC(lag7.intF$mer) #
-# plot(lag7.intF$gam)
-# 
-# AIC(lag7.bothF$mer, lag7.intF$mer) #only 2 different
-# 
-# 
-# 
-# 
-# #age 8------
-# 
-# lag8.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                       mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                       prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                       pollock_survey_abun_mil_at_age_scaled +
-#                       apex_pred_biom_scaled + 
-#                       forage_fish_biom_scaled + 
-#                       pelagic_forager_biom_scaled +
-#                       s(cohort, bs="re"),
-#                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag8par ) #one int sig
-# gam.check(lag8.intF$gam) #not bad
-# summary(lag8.intF$gam) #
-# summary(lag8.intF$mer) #
-# AIC_8lagintF <- AIC(lag8.intF$mer) #
-# plot(lag8.intF$gam)
-# 
-# AIC(lag8.bothF$mer, lag8.intF$mer) #same
-# 
-# 
-# 
-# 
-# #age 9------
-# 
-# lag9.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                       mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                       prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                       pollock_survey_abun_mil_at_age_scaled +
-#                       apex_pred_biom_scaled + 
-#                       forage_fish_biom_scaled + 
-#                       pelagic_forager_biom_scaled +
-#                       s(cohort, bs="re"),
-#                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag9par ) #one int sig
-# gam.check(lag9.intF$gam) #not bad
-# summary(lag9.intF$gam) #
-# summary(lag9.intF$mer) #
-# AIC_9lagintF <- AIC(lag9.intF$mer) #
-# plot(lag9.intF$gam)
-# 
-# AIC(lag9.bothF$mer, lag9.intF$mer) #same
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# #age 10------
-# 
-# lag10.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                        mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                        prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                        pollock_survey_abun_mil_at_age_scaled +
-#                        apex_pred_biom_scaled + 
-#                        forage_fish_biom_scaled + 
-#                        pelagic_forager_biom_scaled +
-#                        s(cohort, bs="re"),
-#                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag10par ) #int not sig
-# gam.check(lag10.intF$gam) #not bad
-# summary(lag10.intF$gam) #
-# summary(lag10.intF$mer) #
-# AIC_10lagintF <- AIC(lag10.intF$mer) #
-# plot(lag10.intF$gam)
-# 
-# AIC(lag10.bothF$mer, lag10.intF$mer) #int 3 higher
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# #age 11------
-# 
-# lag11.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                        mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                        prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                        pollock_survey_abun_mil_at_age_scaled +
-#                        apex_pred_biom_scaled + 
-#                        forage_fish_biom_scaled + 
-#                        pelagic_forager_biom_scaled +
-#                        s(cohort, bs="re"),
-#                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag11par ) #int not sig
-# gam.check(lag11.intF$gam) #not bad
-# summary(lag11.intF$gam) #
-# summary(lag11.intF$mer) #
-# AIC_11lagintF <- AIC(lag11.intF$mer) #
-# plot(lag11.intF$gam)
-# 
-# AIC(lag11.bothF$mer, lag11.intF$mer) #int 4 higher
-# 
-# 
-# #age 12------
-# 
-# lag12.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                        mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                        prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                        pollock_survey_abun_mil_at_age_scaled +
-#                        apex_pred_biom_scaled + 
-#                        forage_fish_biom_scaled + 
-#                        pelagic_forager_biom_scaled +
-#                        s(cohort, bs="re"),
-#                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag12par ) #int not sig
-# gam.check(lag12.intF$gam) #not bad
-# summary(lag12.intF$gam) #
-# summary(lag12.intF$mer) #
-# AIC_12lagintF <- AIC(lag12.intF$mer) #
-# plot(lag12.intF$gam)
-# 
-# AIC(lag12.bothF$mer, lag12.intF$mer) #int 2 higher
-# 
-# 
-# 
-# #age 13------
-# 
-# lag13.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                        mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                        prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                        pollock_survey_abun_mil_at_age_scaled +
-#                        apex_pred_biom_scaled + 
-#                        forage_fish_biom_scaled + 
-#                        pelagic_forager_biom_scaled +
-#                        s(cohort, bs="re"),
-#                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag13par ) #int not sig
-# gam.check(lag13.intF$gam) #not bad
-# summary(lag13.intF$gam) #
-# summary(lag13.intF$mer) #
-# AIC_13lagintF <- AIC(lag13.intF$mer) #
-# plot(lag13.intF$gam)
-# 
-# AIC(lag13.bothF$mer, lag13.intF$mer) #int 2 higher
-# 
-# 
-# 
-# #age 14------
-# 
-# lag14.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                        mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                        prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                        pollock_survey_abun_mil_at_age_scaled +
-#                        apex_pred_biom_scaled + 
-#                        forage_fish_biom_scaled + 
-#                        pelagic_forager_biom_scaled +
-#                        s(cohort, bs="re"),
-#                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag14par ) #one int sig
-# gam.check(lag14.intF$gam) #not bad
-# summary(lag14.intF$gam) #
-# summary(lag14.intF$mer) #
-# AIC_14lagintF <- AIC(lag14.intF$mer) #
-# plot(lag14.intF$gam)
-# 
-# AIC(lag14.bothF$mer, lag14.intF$mer) #int 4 lower
-# 
-# 
-# 
-# 
-# #age 15------
-# 
-# lag15.intF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
-#                        mean_weight_parentF_scaled:south.sst.amj.scaled + mean_weight_parentF_scaled +
-#                        prevyr_prevage_F_scaled:south.sst.amj.scaled + prevyr_prevage_F_scaled +
-#                        pollock_survey_abun_mil_at_age_scaled +
-#                        apex_pred_biom_scaled + 
-#                        forage_fish_biom_scaled + 
-#                        pelagic_forager_biom_scaled +
-#                        s(cohort, bs="re"),
-#                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag15par ) #int not sig
-# gam.check(lag15.intF$gam) #not bad
-# summary(lag15.intF$gam) #
-# summary(lag15.intF$mer) #
-# AIC_15lagintF <- AIC(lag15.intF$mer) #
-# plot(lag15.intF$gam)
-# 
-# AIC(lag15.bothF$mer, lag15.intF$mer) #int 2 higher
+#prev yr prev age does NOT work for age 1 so drop
+lag1.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                      mean_weight_parentF_scaled + 
+                      # prevyr_prevage_F_scaled +
+                      pollock_survey_abun_mil_at_age_scaled +
+                      apex_pred_biom_scaled + 
+                      forage_fish_biom_scaled + 
+                      pelagic_forager_biom_scaled +
+                      s(cohort, bs="re"),
+                    random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag1par )
+gam.check(lag1.bothF_REML$gam) #not bad
+summary(lag1.bothF_REML$gam) #
+summary(lag1.bothF_REML$mer) #
+
+
+
+#age 2------
+
+lag2.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                      mean_weight_parentF_scaled + 
+                      prevyr_prevage_F_scaled +
+                      pollock_survey_abun_mil_at_age_scaled +
+                      apex_pred_biom_scaled + 
+                      forage_fish_biom_scaled + 
+                      pelagic_forager_biom_scaled +
+                      s(cohort, bs="re"),
+                    random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag2par )
+gam.check(lag2.bothF_REML$gam) #not bad
+summary(lag2.bothF_REML$gam) #
+summary(lag2.bothF_REML$mer) #
+
+
+
+
+
+#age 3------
+
+lag3.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                      mean_weight_parentF_scaled + 
+                      prevyr_prevage_F_scaled +
+                      pollock_survey_abun_mil_at_age_scaled +
+                      apex_pred_biom_scaled + 
+                      forage_fish_biom_scaled + 
+                      pelagic_forager_biom_scaled +
+                      s(cohort, bs="re"),
+                    random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag3par )
+gam.check(lag3.bothF_REML$gam) #not bad
+summary(lag3.bothF_REML$gam) #
+summary(lag3.bothF_REML$mer) #
+
+
+
+
+
+#age 4------
+
+lag4.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                      mean_weight_parentF_scaled + 
+                      prevyr_prevage_F_scaled +
+                      pollock_survey_abun_mil_at_age_scaled +
+                      apex_pred_biom_scaled + 
+                      forage_fish_biom_scaled + 
+                      pelagic_forager_biom_scaled +
+                      s(cohort, bs="re"),
+                    random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag4par )
+gam.check(lag4.bothF_REML$gam) #not bad
+summary(lag4.bothF_REML$gam) #
+summary(lag4.bothF_REML$mer) #
+
+
+
+
+
+
+
+#age 5------
+
+lag5.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                      mean_weight_parentF_scaled + 
+                      prevyr_prevage_F_scaled +
+                      pollock_survey_abun_mil_at_age_scaled +
+                      apex_pred_biom_scaled + 
+                      forage_fish_biom_scaled + 
+                      pelagic_forager_biom_scaled +
+                      s(cohort, bs="re"),
+                    random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag5par )
+gam.check(lag5.bothF_REML$gam) #not bad
+summary(lag5.bothF_REML$gam) #
+summary(lag5.bothF_REML$mer) #
+
+
+
+
+
+
+
+#age 6------
+
+lag6.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                      mean_weight_parentF_scaled + 
+                      prevyr_prevage_F_scaled +
+                      pollock_survey_abun_mil_at_age_scaled +
+                      apex_pred_biom_scaled + 
+                      forage_fish_biom_scaled + 
+                      pelagic_forager_biom_scaled +
+                      s(cohort, bs="re"),
+                    random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag6par )
+gam.check(lag6.bothF_REML$gam) #not bad
+summary(lag6.bothF_REML$gam) #
+summary(lag6.bothF_REML$mer) #
+
+
+
+
+
+
+
+
+#age 7------
+
+lag7.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                      mean_weight_parentF_scaled + 
+                      prevyr_prevage_F_scaled +
+                      pollock_survey_abun_mil_at_age_scaled +
+                      apex_pred_biom_scaled + 
+                      forage_fish_biom_scaled + 
+                      pelagic_forager_biom_scaled +
+                      s(cohort, bs="re"),
+                    random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag7par )
+gam.check(lag7.bothF_REML$gam) #not bad
+summary(lag7.bothF_REML$gam) #
+summary(lag7.bothF_REML$mer) #
+
+
+
+
+
+#age 8------
+
+lag8.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                      mean_weight_parentF_scaled + 
+                      prevyr_prevage_F_scaled +
+                      pollock_survey_abun_mil_at_age_scaled +
+                      apex_pred_biom_scaled + 
+                      forage_fish_biom_scaled + 
+                      pelagic_forager_biom_scaled +
+                      s(cohort, bs="re"),
+                    random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag8par )
+gam.check(lag8.bothF_REML$gam) #not bad
+summary(lag8.bothF_REML$gam) #
+summary(lag8.bothF_REML$mer) #
+
+
+
+
+
+
+
+#age 9------
+
+lag9.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                      mean_weight_parentF_scaled + 
+                      prevyr_prevage_F_scaled +
+                      pollock_survey_abun_mil_at_age_scaled +
+                      apex_pred_biom_scaled + 
+                      forage_fish_biom_scaled + 
+                      pelagic_forager_biom_scaled +
+                      s(cohort, bs="re"),
+                    random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag9par )
+gam.check(lag9.bothF_REML$gam) #not bad
+summary(lag9.bothF_REML$gam) #
+summary(lag9.bothF_REML$mer) #
+
+
+
+
+
+#age 10------
+
+lag10.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       mean_weight_parentF_scaled + 
+                       prevyr_prevage_F_scaled +
+                       pollock_survey_abun_mil_at_age_scaled +
+                       apex_pred_biom_scaled + 
+                       forage_fish_biom_scaled + 
+                       pelagic_forager_biom_scaled +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag10par )
+gam.check(lag10.bothF_REML$gam) #not bad
+summary(lag10.bothF_REML$gam) #
+summary(lag10.bothF_REML$mer) #
+
+
+
+
+
+
+
+
+#age 11------
+
+lag11.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       mean_weight_parentF_scaled + 
+                       prevyr_prevage_F_scaled +
+                       pollock_survey_abun_mil_at_age_scaled +
+                       apex_pred_biom_scaled + 
+                       forage_fish_biom_scaled + 
+                       pelagic_forager_biom_scaled +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag11par )
+gam.check(lag11.bothF_REML$gam) #not bad
+summary(lag11.bothF_REML$gam) #
+summary(lag11.bothF_REML$mer) #
+
+
+
+#age 12------
+
+lag12.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       mean_weight_parentF_scaled + 
+                       prevyr_prevage_F_scaled +
+                       pollock_survey_abun_mil_at_age_scaled +
+                       apex_pred_biom_scaled + 
+                       forage_fish_biom_scaled + 
+                       pelagic_forager_biom_scaled +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag12par )
+gam.check(lag12.bothF_REML$gam) #not bad
+summary(lag12.bothF_REML$gam) #
+summary(lag12.bothF_REML$mer) #
+
+
+
+
+
+#age 13------
+
+lag13.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       mean_weight_parentF_scaled + 
+                       prevyr_prevage_F_scaled +
+                       pollock_survey_abun_mil_at_age_scaled +
+                       apex_pred_biom_scaled + 
+                       forage_fish_biom_scaled + 
+                       pelagic_forager_biom_scaled +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag13par )
+gam.check(lag13.bothF_REML$gam) #not bad
+summary(lag13.bothF_REML$gam) #
+summary(lag13.bothF_REML$mer) #
+
+
+
+
+
+#age 14------
+
+
+lag14.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       mean_weight_parentF_scaled + 
+                       prevyr_prevage_F_scaled +
+                       pollock_survey_abun_mil_at_age_scaled +
+                       apex_pred_biom_scaled + 
+                       forage_fish_biom_scaled + 
+                       pelagic_forager_biom_scaled +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag14par )
+gam.check(lag14.bothF_REML$gam) #not bad
+summary(lag14.bothF_REML$gam) #
+summary(lag14.bothF_REML$mer) #
+
+
+
+
+
+#age 15------
+
+lag15.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+                       mean_weight_parentF_scaled + 
+                       prevyr_prevage_F_scaled +
+                       pollock_survey_abun_mil_at_age_scaled +
+                       apex_pred_biom_scaled + 
+                       forage_fish_biom_scaled + 
+                       pelagic_forager_biom_scaled +
+                       s(cohort, bs="re"),
+                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag15par )
+gam.check(lag15.bothF_REML$gam) #not bad
+summary(lag15.bothF_REML$gam) #
+summary(lag15.bothF_REML$mer) # #
+plot(lag15.bothF_REML$gam)
+
+
+#Back simulations----------------------------------------------------------------------------
+
+#maybe start by getting SDs, confiriming that scale did the same as Curry did
+#then create a loop that will make 2 new datasets without response variable, 
+#add 1 SD to one and subtract 1 SD from other, use predict (how to deal with random?) 
+
+names(lag1par)
+
+back_dat <- data.frame(matrix(ncol=11, nrow=8))
+namesv <- c("LONGITUDE", "LATITUDE", "julian_scaled", 
+            "south.sst.amj.scaled", 
+  "mean_weight_parentF_scaled", 
+  "prevyr_prevage_F_scaled",
+  "pollock_survey_abun_mil_at_age_scaled",
+  "apex_pred_biom_scaled",
+  "forage_fish_biom_scaled", 
+  "pelagic_forager_biom_scaled", "cohort")
+colnames(back_dat) <- namesv
+
+back_dat[1,3:10] <- c(1, 0, 0, 0, 0, 0, 0, 0 )
+back_dat[2,3:10] <- c(0, 1, 0, 0, 0, 0, 0, 0 )
+back_dat[3,3:10] <- c(0, 0, 1, 0, 0, 0, 0, 0 )
+back_dat[4,3:10] <- c(0, 0, 0, 1, 0, 0, 0, 0 )
+back_dat[5,3:10] <- c(0, 0, 0, 0, 1, 0, 0, 0 )
+back_dat[6,3:10] <- c(0, 0, 0, 0, 0, 1, 0, 0 )
+back_dat[7,3:10] <- c(0, 0, 0, 0, 0, 0, 1, 0 )
+back_dat[8,3:10] <- c(0, 0, 0, 0, 0, 0, 0, 1 )
+
+lat_median <- median(datwparents$LATITUDE)
+long_median <- median(datwparents$LONGITUDE)
+cohort_median <- median(as.numeric(as.character(datwparents$cohort)))
+
+back_dat$LATITUDE <- lat_median
+back_dat$LONGITUDE <- long_median
+back_dat$cohort <- cohort_median
+
+back_dat$covar <- namesv[3:10]
+
+#for each age
+age1pred <- predict.gam(lag1.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age1pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age1 <- age1pred$fit
+back_dat$pred_SE_age1 <- age1pred$se.fit
+
+#
+
+age2pred <- predict.gam(lag2.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age2pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age2 <- age2pred$fit
+back_dat$pred_SE_age2 <- age2pred$se.fit
+
+#
+
+age3pred <- predict.gam(lag3.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age3pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age3 <- age3pred$fit
+back_dat$pred_SE_age3 <- age3pred$se.fit
+
+#
+
+age4pred <- predict.gam(lag4.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age4pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age4 <- age4pred$fit
+back_dat$pred_SE_age4 <- age4pred$se.fit
+
+#
+
+age5pred <- predict.gam(lag5.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age5pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age5 <- age5pred$fit
+back_dat$pred_SE_age5 <- age5pred$se.fit
+
+#
+
+age6pred <- predict.gam(lag6.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age6pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age6 <- age6pred$fit
+back_dat$pred_SE_age6 <- age6pred$se.fit
+
+#
+
+age7pred <- predict.gam(lag7.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age7pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age7 <- age7pred$fit
+back_dat$pred_SE_age7 <- age7pred$se.fit
+
+#
+
+age8pred <- predict.gam(lag8.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age8pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age8 <- age8pred$fit
+back_dat$pred_SE_age8 <- age8pred$se.fit
+
+#
+
+age9pred <- predict.gam(lag9.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age9pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age9 <- age9pred$fit
+back_dat$pred_SE_age9 <- age9pred$se.fit
+
+#
+
+age10pred <- predict.gam(lag10.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age10pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age10 <- age10pred$fit
+back_dat$pred_SE_age10 <- age10pred$se.fit
+
+#
+
+age11pred <- predict.gam(lag11.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age11pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age11 <- age11pred$fit
+back_dat$pred_SE_age11 <- age11pred$se.fit
+
+#
+
+age12pred <- predict.gam(lag12.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age12pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age12 <- age12pred$fit
+back_dat$pred_SE_age12 <- age12pred$se.fit
+
+#
+
+age13pred <- predict.gam(lag13.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age13pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age13 <- age13pred$fit
+back_dat$pred_SE_age13 <- age13pred$se.fit
+
+#
+
+age14pred <- predict.gam(lag14.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age14pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age14 <- age14pred$fit
+back_dat$pred_SE_age14 <- age14pred$se.fit
+
+#
+
+age15pred <- predict.gam(lag15.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
+length(age15pred$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat$predicted_age15 <- age15pred$fit
+back_dat$pred_SE_age15 <- age15pred$se.fit
+
+
+
+#pivot long then plot?
+
+sub_pred <- back_dat[,c(1,2,11:12, 13:42)]
+sub_predict <- sub_pred[,c("LONGITUDE", "LATITUDE", "cohort", "covar",
+  "predicted_age1",
+                           "predicted_age2",
+                           "predicted_age3",
+                           "predicted_age4",
+                           "predicted_age5",
+                           "predicted_age6",
+                           "predicted_age7",
+                           "predicted_age8",
+                           "predicted_age9",
+                           "predicted_age10",
+                           "predicted_age11",
+                           "predicted_age12",
+                           "predicted_age13",
+                           "predicted_age14",
+                           "predicted_age15")]
+
+sub_se <- sub_pred[,c("LONGITUDE", "LATITUDE", "cohort", "covar",
+                           "pred_SE_age1",
+                           "pred_SE_age2",
+                           "pred_SE_age3",
+                           "pred_SE_age4",
+                           "pred_SE_age5",
+                           "pred_SE_age6",
+                           "pred_SE_age7",
+                           "pred_SE_age8",
+                           "pred_SE_age9",
+                           "pred_SE_age10",
+                           "pred_SE_age11",
+                           "pred_SE_age12",
+                           "pred_SE_age13",
+                           "pred_SE_age14",
+                           "pred_SE_age15")]
+
+back_plot_pred <- sub_predict %>% 
+  pivot_longer(!c(LATITUDE, LONGITUDE, cohort, covar), names_to = "response", values_to = "value")
+back_plot_pred$age <- gsub("predicted_age", "", back_plot_pred$response)
+back_plot_pred$age <- as.numeric(as.character(back_plot_pred$age))
+
+back_plot_se <- sub_se %>% 
+  pivot_longer(!c(LATITUDE, LONGITUDE, cohort, covar), names_to = "response", values_to = "SE")
+back_plot_se$age <- gsub("pred_SE_age", "", back_plot_se$response)
+back_plot_se$age <- as.numeric(as.character(back_plot_se$age))
+
+back_plot_dat <- left_join(back_plot_pred, back_plot_se, by=c("LONGITUDE", "LATITUDE", "cohort", "covar", "age"))
+#
+
+
+
+p1 <- ggplot(back_plot_dat, aes(value, covar)) + geom_point() + geom_errorbar(aes(xmin=(value-SE),
+                                                                                  xmax=(value+SE))) + 
+  facet_wrap(~age) + geom_vline(xintercept = 0, colour="red") 
+p1
+
+#are error bars repeating?
+
+back_plot_dat[which(back_plot_dat$age==1 & back_plot_dat$covar=="south.sst.amj.scaled"),]
+
+
+
+
+
