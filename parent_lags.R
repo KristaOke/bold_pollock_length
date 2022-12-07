@@ -93,6 +93,68 @@ scaled_prev <- as.data.frame(scaledprevtbl)
 
 scaled_prev$cohort <- as.factor(scaled_prev$cohort)
 
+#temp section check z-score=====
+
+#just want to doublecheck z scores as part of troubleshooting
+
+testmeans <- lagged2prevsub %>% group_by(AGE) %>%
+  mutate(length_age_mean=mean(LENGTH, na.rm=TRUE),
+         weight_age_mean=mean(WEIGHT, na.rm=TRUE),
+         mean_ann_F3plus_age_mean=mean(mean_annual_F3plus.x, na.rm=TRUE),
+         pol_abun_bil_at_age_age_mean=mean(pollock_abun_bil_at_age, na.rm=TRUE),
+         pollock_survey_abun_mil_at_age_age_mean=mean(pollock_survey_abun_mil_at_age, na.rm=TRUE),
+         apex_pred_biom_age_mean=mean(apex_pred_biomass, na.rm=TRUE),
+         forage_fish_biom_age_mean=mean(forage_fish_biomass, na.rm=TRUE),
+         pelagic_forager_biom_age_mean=mean(pelagic_forager_biomass, na.rm=TRUE),
+         lag1_F_age_mean=mean(lag1_F, na.rm=TRUE),
+         lag2_F_age_mean=mean(lag2_F, na.rm=TRUE),
+         lag3_F_age_mean=mean(lag3_F, na.rm=TRUE),
+         lag4_F_age_mean=mean(lag4_F, na.rm=TRUE),
+         lag5_F_age_mean=mean(lag5_F, na.rm=TRUE),
+         lag6_F_age_mean=mean(lag6_F, na.rm=TRUE),
+         lag7_F_age_mean=mean(lag7_F, na.rm=TRUE),
+         lag8_F_age_mean=mean(lag8_F, na.rm=TRUE),
+         lag9_F_age_mean=mean(lag9_F, na.rm=TRUE),
+         lag10_F_age_mean=mean(lag10_F, na.rm=TRUE),
+         prevyr_prevage_F_age_mean = mean(prevyr_prevage_F, na.rm=TRUE),
+         julian_age_mean=mean(julian, na.rm=TRUE),
+         south.sst.amj_age_mean=mean(south.sst.amj, na.rm=TRUE),
+         
+         length_age_sd=sd(LENGTH, na.rm=TRUE),
+         weight_age_sd=sd(WEIGHT, na.rm=TRUE),
+         mean_ann_F3plus_age_sd=sd(mean_annual_F3plus.x, na.rm=TRUE),
+         pol_abun_bil_at_age_age_sd=sd(pollock_abun_bil_at_age, na.rm=TRUE),
+         pollock_survey_abun_mil_at_age_age_sd=sd(pollock_survey_abun_mil_at_age, na.rm=TRUE),
+         apex_pred_biom_age_sd=sd(apex_pred_biomass, na.rm=TRUE),
+         forage_fish_biom_age_sd=sd(forage_fish_biomass, na.rm=TRUE),
+         pelagic_forager_biom_age_sd=sd(pelagic_forager_biomass, na.rm=TRUE),
+         lag1_F_age_sd=sd(lag1_F, na.rm=TRUE),
+         lag2_F_age_sd=sd(lag2_F, na.rm=TRUE),
+         lag3_F_age_sd=sd(lag3_F, na.rm=TRUE),
+         lag4_F_age_sd=sd(lag4_F, na.rm=TRUE),
+         lag5_F_age_sd=sd(lag5_F, na.rm=TRUE),
+         lag6_F_age_sd=sd(lag6_F, na.rm=TRUE),
+         lag7_F_age_sd=sd(lag7_F, na.rm=TRUE),
+         lag8_F_age_sd=sd(lag8_F, na.rm=TRUE),
+         lag9_F_age_sd=sd(lag9_F, na.rm=TRUE),
+         lag10_F_age_sd=sd(lag10_F, na.rm=TRUE),
+         prevyr_prevage_F_age_sd = sd(prevyr_prevage_F, na.rm=TRUE),
+         julian_age_sd=sd(julian, na.rm=TRUE),
+         south.sst.amj_age_sd=sd(south.sst.amj, na.rm=TRUE))
+
+
+testmeans$south.sst.amj_testZ <- (testmeans$south.sst.amj - testmeans$south.sst.amj_age_mean)/testmeans$south.sst.amj_age_sd
+testmeans$julian_testZ <- (testmeans$julian - testmeans$julian_age_mean)/testmeans$julian_age_sd
+testmeans$mean_annual_F3plus.x_testZ <- (testmeans$mean_annual_F3plus.x - testmeans$mean_ann_F3plus_age_mean)/testmeans$mean_ann_F3plus_age_sd
+testmeans$pollock_abun_bil_at_age_testZ <- (testmeans$pollock_abun_bil_at_age - testmeans$pol_abun_bil_at_age_age_mean)/testmeans$pol_abun_bil_at_age_age_sd
+testmeans$pollock_survey_abun_mil_at_age_testZ <- (testmeans$pollock_survey_abun_mil_at_age - testmeans$pollock_survey_abun_mil_at_age_age_mean)/testmeans$pollock_survey_abun_mil_at_age_age_sd
+testmeans$apex_pred_biomass_testZ <- (testmeans$apex_pred_biomass - testmeans$apex_pred_biom_age_mean)/testmeans$apex_pred_biom_age_sd
+testmeans$forage_fish_biomass_testZ <- (testmeans$forage_fish_biomass - testmeans$forage_fish_biom_age_mean)/testmeans$forage_fish_biom_age_sd
+testmeans$pelagic_forager_biomass_testZ <- (testmeans$pelagic_forager_biomass - testmeans$pelagic_forager_biom_age_mean)/testmeans$pelagic_forager_biom_age_sd
+testmeans$prevyr_prevage_F_testZ <- (testmeans$prevyr_prevage_F - testmeans$prevyr_prevage_F_age_mean)/testmeans$prevyr_prevage_F_age_sd
+
+#YEP everything got z-scored correctly
+
 #read in selectivity data===========
 
 # selgrid <- read_excel(paste(wd,"/data/Selgrid.xlsx", sep=""),
@@ -193,14 +255,14 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
     as.numeric(as.character(spawners_dat$Age))  
   spawners_dat$cohort <- as.factor(spawners_dat$cohort)
   
-  ggplot(spawners_dat, aes(as.numeric(as.character(Age)), Year, col=as.factor(cohort))) + geom_point() +
-    scale_colour_manual(values = c("red", "blue", "green", "black", "pink", "brown", "yellow", "grey", "orange",
-                                   "dark blue", "dark red", "dark grey", "dark green", #repeat
-                                   "red", "blue", "green", "black", "pink", "brown", "yellow", "grey", "orange",
-                                   "dark blue", "dark red", "dark grey", "dark green", #repeat
-                                   "red", "blue", "green", "black", "pink", "brown", "yellow", "grey", "orange",
-                                   "dark blue", "dark red", "dark grey", "dark green"))
-  
+  # ggplot(spawners_dat, aes(as.numeric(as.character(Age)), Year, col=as.factor(cohort))) + geom_point() +
+  #   scale_colour_manual(values = c("red", "blue", "green", "black", "pink", "brown", "yellow", "grey", "orange",
+  #                                  "dark blue", "dark red", "dark grey", "dark green", #repeat
+  #                                  "red", "blue", "green", "black", "pink", "brown", "yellow", "grey", "orange",
+  #                                  "dark blue", "dark red", "dark grey", "dark green", #repeat
+  #                                  "red", "blue", "green", "black", "pink", "brown", "yellow", "grey", "orange",
+  #                                  "dark blue", "dark red", "dark grey", "dark green"))
+  # 
 #now we know who likely parents are, need to link to fishing on those years/cohorts
   
   #fishing data
@@ -243,8 +305,8 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
   #now we know what F they've experienced, so let's get weighted avg of those Fs based on propotions
   
   #join first then
- mean_parent_Fs <- spawners_dat %>% group_by(Year) %>%
-   summarize(weighted_parent_mean_F  = weighted.mean(x=mean_to_date_cohort_mature_F, w=prop_SPa_age, na.rm=TRUE))
+ # mean_parent_Fs <- spawners_dat %>% group_by(Year) %>%
+ #   summarize(weighted_parent_mean_F  = weighted.mean(x=mean_to_date_cohort_mature_F, w=prop_SPa_age, na.rm=TRUE))
  #ok who to group by here is very important
  #currently because I'm grouping by year (here and above) I will have the mean F the parents present in a year
  #have experienced - that still needs to be linked back to the offspring
@@ -271,7 +333,7 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
     geom_line() + xlab("Year") + ylab("Weighted mean parent F")#gut check this
   
   
-  #then link offspring cohort to year???? ie 2000 parent weighted F linked to fish born in 2000
+  #then link offspring cohort to year - ie 2000 parent weighted F linked to fish born in 2000
   
    
   mean_parent_Fs$Year <- as.factor(mean_parent_Fs$Year)
