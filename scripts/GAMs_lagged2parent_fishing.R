@@ -12,6 +12,8 @@ library("rnaturalearthdata")
 library( "ggspatial" )
 library("sf")
 library(tidyverse)
+library(gratia)
+library(patchwork)
 
 #get data-----
 
@@ -81,6 +83,11 @@ mean_lengths <- datwparents %>% group_by(YEAR, AGE) %>%
 
 mean_len_join <- left_join(datwparents, mean_lengths)
 
+mean_len_join$period <- NA
+mean_len_join$period [which(as.numeric(as.character(mean_len_join$YEAR))<1988)] <- "Before 1987"
+mean_len_join$period [which(as.numeric(as.character(mean_len_join$YEAR))>1987)] <- "After 1987"
+
+
 ggplot(mean_len_join[which(mean_len_join$AGE!=0),], aes(mean_weight_parentF_scaled, mean_ann_length)) + geom_point() + facet_wrap(~AGE, scales="free_y", ncol=3) +
   geom_smooth(method="lm") + #scale_colour_gradient(low = "blue", high = "red") + 
   ylab("Annual mean length (mm)") + xlab("Mean weighted fishing intensity on parents") + theme_bw()
@@ -90,43 +97,44 @@ ggplot(mean_len_join[which(mean_len_join$AGE!=0),], aes(mean_weight_parentF_scal
   ylab("Annual mean length (mm)") + xlab("Mean weighted fishing intensity on parents") + theme_bw()
 
 
+
 #would be good to plot these on more consistent y axis across ages
 library(cowplot)
 
 p1 <- ggplot(mean_len_join[which(mean_len_join$AGE==1 | mean_len_join$AGE==2 |
-                                   mean_len_join$AGE==3),], aes(mean_weight_parentF_scaled, mean_ann_length, col=as.numeric(as.character(YEAR)))) + geom_point() + 
+                                   mean_len_join$AGE==3),], aes(mean_weight_parentF_scaled, mean_ann_length)) + geom_point(aes(col=period)) + 
   facet_wrap(~AGE, ncol=3) +
   geom_smooth(method="lm") + 
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
-  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4))
+  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4)) + scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 p2 <- ggplot(mean_len_join[which(mean_len_join$AGE==4 | mean_len_join$AGE==5 |
-                                   mean_len_join$AGE==6),], aes(mean_weight_parentF_scaled, mean_ann_length, col=as.numeric(as.character(YEAR)))) + geom_point() + 
+                                   mean_len_join$AGE==6),], aes(mean_weight_parentF_scaled, mean_ann_length)) + geom_point(aes(col=period)) + 
   facet_wrap(~AGE, ncol=3) +
   geom_smooth(method="lm") + 
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
-  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4))
+  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4))+ scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 p3 <- ggplot(mean_len_join[which(mean_len_join$AGE==7 | mean_len_join$AGE==8 |
-                                   mean_len_join$AGE==9),], aes(mean_weight_parentF_scaled, mean_ann_length, col=as.numeric(as.character(YEAR)))) + geom_point() + 
+                                   mean_len_join$AGE==9),], aes(mean_weight_parentF_scaled, mean_ann_length)) + geom_point(aes(col=period)) + 
   facet_wrap(~AGE, ncol=3) +
   geom_smooth(method="lm") + 
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
-  ylab("Annual mean length (mm)") + xlab("") + theme_bw() +xlim(c(-2,4))
+  ylab("Annual mean length (mm)") + xlab("") + theme_bw() +xlim(c(-2,4))+ scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 p4 <- ggplot(mean_len_join[which(mean_len_join$AGE==10 | mean_len_join$AGE==11 |
-                                   mean_len_join$AGE==12),], aes(mean_weight_parentF_scaled, mean_ann_length, col=as.numeric(as.character(YEAR)))) + geom_point() + 
+                                   mean_len_join$AGE==12),], aes(mean_weight_parentF_scaled, mean_ann_length)) + geom_point(aes(col=period)) + 
   facet_wrap(~AGE, ncol=3) +
   geom_smooth(method="lm") +
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
-  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4))
+  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4))+ scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 p5 <- ggplot(mean_len_join[which(mean_len_join$AGE==13 | mean_len_join$AGE==14 |
-                                   mean_len_join$AGE==15),], aes(mean_weight_parentF_scaled, mean_ann_length, col=as.numeric(as.character(YEAR)))) + geom_point() + 
+                                   mean_len_join$AGE==15),], aes(mean_weight_parentF_scaled, mean_ann_length)) + geom_point(aes(col=period)) + 
   facet_wrap(~AGE, ncol=3) + theme_bw() +
   geom_smooth(method="lm") +  
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))+
-  ylab("") + xlab("Mean weighted fishing intensity on parents") +xlim(c(-2,4))
+  ylab("") + xlab("Mean weighted fishing intensity on parents") +xlim(c(-2,4))+ scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 
 plot_grid(p1, p2, p3, p4, p5, ncol=1)
@@ -139,7 +147,9 @@ ggplot(mean_len_join[which(mean_len_join$AGE!=0),], aes(prevyr_prevage_F_scaled,
 
 ggplot(mean_len_join[which(mean_len_join$AGE!=0),], aes(as.numeric(as.character(YEAR)), prevyr_prevage_F_scaled)) + geom_point() + facet_wrap(~AGE, ncol=3) +
   geom_line() + #scale_colour_gradient(low = "blue", high = "red") + 
-  xlab("Year") + ylab("Fishing intensity on cohort in previous year") + theme_bw()
+  xlab("Year") + ylab("Fishing intensity on cohort in previous year") + theme_bw() + 
+  geom_vline(xintercept=1987, 
+             color = "red", size=0.25)
 
 ggplot(mean_len_join[which(mean_len_join$AGE!=0),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point() + facet_wrap(~AGE, scales="free_y", ncol=3) +
   geom_smooth(method="lm") +theme_bw()+
@@ -149,33 +159,33 @@ ggplot(mean_len_join[which(mean_len_join$AGE!=0),], aes(prevyr_prevage_F_scaled,
 
 v1 <- ggplot(mean_len_join[which(mean_len_join$AGE==1|
                                    mean_len_join$AGE==2|
-                                   mean_len_join$AGE==3),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point() + facet_wrap(~AGE, ncol=3) +
+                                   mean_len_join$AGE==3),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point(aes(col=period)) + facet_wrap(~AGE, ncol=3) +
   geom_smooth(method="lm") +theme_bw()+
-  ylab("") + xlab("") 
+  ylab("") + xlab("") + scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 v2 <- ggplot(mean_len_join[which(mean_len_join$AGE==4|
                                    mean_len_join$AGE==5|
-                                   mean_len_join$AGE==6),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point() + facet_wrap(~AGE, ncol=3) +
+                                   mean_len_join$AGE==6),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point(aes(col=period)) + facet_wrap(~AGE, ncol=3) +
   geom_smooth(method="lm") +theme_bw()+
-  ylab("") + xlab("") 
+  ylab("") + xlab("") + scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 v3 <- ggplot(mean_len_join[which(mean_len_join$AGE==7|
                                    mean_len_join$AGE==8|
-                                   mean_len_join$AGE==9),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point() + facet_wrap(~AGE, ncol=3) +
+                                   mean_len_join$AGE==9),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point(aes(col=period)) + facet_wrap(~AGE, ncol=3) +
   geom_smooth(method="lm") +theme_bw()+
-  ylab("Annual mean length (mm)") + xlab("") 
+  ylab("Annual mean length (mm)") + xlab("") + scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 v4 <- ggplot(mean_len_join[which(mean_len_join$AGE==10|
                                    mean_len_join$AGE==11|
-                                   mean_len_join$AGE==12),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point() + facet_wrap(~AGE, ncol=3) +
+                                   mean_len_join$AGE==12),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point(aes(col=period)) + facet_wrap(~AGE, ncol=3) +
   geom_smooth(method="lm") +theme_bw()+
-  ylab("") + xlab("") 
+  ylab("") + xlab("") + scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 v5 <- ggplot(mean_len_join[which(mean_len_join$AGE==13|
                                    mean_len_join$AGE==14|
-                                   mean_len_join$AGE==15),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point() + facet_wrap(~AGE,  ncol=3) +
+                                   mean_len_join$AGE==15),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point(aes(col=period)) + facet_wrap(~AGE,  ncol=3) +
   geom_smooth(method="lm") +theme_bw()+
-  ylab("") + xlab("Fishing intensity on cohort in previous year") 
+  ylab("") + xlab("Fishing intensity on cohort in previous year") + scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 plot_grid(v1, v2, v3, v4, v5, ncol=1)
 
@@ -1020,6 +1030,61 @@ summary(lag15.bothF_REML$gam) #
 summary(lag15.bothF_REML$mer) # #
 plot(lag15.bothF_REML$gam)
 
+#SST smooths plot-----------------------
+
+par(mfrow=c(5,3), mai = c(1, 0.1, 0.1, 0.1))
+
+
+visreg(lag1.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag1par, ylab="" )
+visreg(lag2.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag2par, ylab="")
+visreg(lag3.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag3par, ylab="")
+visreg(lag4.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag4par, ylab="")
+visreg(lag5.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag5par, ylab="")
+visreg(lag6.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag6par, ylab="")
+visreg(lag7.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag7par, ylab="")
+visreg(lag8.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag8par, ylab="")
+visreg(lag9.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag9par, ylab="")
+visreg(lag10.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag10par, ylab="")
+visreg(lag11.bothF_REML$gam,  xvar="south.sst.amj.scaled", data=lag11par, ylab="")
+visreg(lag12.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag12par, ylab="")
+visreg(lag13.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag13par, ylab="")
+visreg(lag14.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag14par, ylab="")
+visreg(lag15.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag15par, ylab="")
+
+plot1 <- draw(lag1.bothF_REML$gam, select=1, title="", data=lag1par, gg=TRUE)+ theme_bw() + 
+  theme(title = element_blank()) 
+plot2 <- draw(lag2.bothF_REML$gam, select=1, data=lag2par, gg=TRUE) + theme_bw() + 
+  theme(title = element_blank())
+plot3 <- draw(lag3.bothF_REML$gam, select=1, title="", data=lag3par, gg=TRUE)+ theme_bw() + 
+  theme(title = element_blank()) 
+plot4 <- draw(lag4.bothF_REML$gam, select=1, data=lag4par, gg=TRUE)+ theme_bw() + 
+  theme(title = element_blank()) 
+plot5 <- draw(lag5.bothF_REML$gam, select=1, title="", data=lag5par, gg=TRUE) + theme_bw() + 
+  theme(title = element_blank())
+plot6 <- draw(lag6.bothF_REML$gam, select=1, data=lag6par, gg=TRUE) + theme_bw() + 
+  theme(title = element_blank())
+plot7 <- draw(lag7.bothF_REML$gam, select=1, title="", data=lag7par, gg=TRUE)+ theme_bw() + 
+  theme(title = element_blank()) 
+plot8 <- draw(lag8.bothF_REML$gam, select=1, data=lag8par, gg=TRUE)+ theme_bw() + 
+  theme(title = element_blank()) 
+plot9 <- draw(lag9.bothF_REML$gam, select=1, title="", data=lag9par, gg=TRUE) + theme_bw() + 
+  theme(title = element_blank())
+plot10 <- draw(lag10.bothF_REML$gam, select=1, data=lag10par, gg=TRUE) + theme_bw() + 
+  theme(title = element_blank())
+plot11 <- draw(lag11.bothF_REML$gam, select=1, data=lag11par, gg=TRUE)+ theme_bw() + 
+  theme(title = element_blank()) 
+plot12 <- draw(lag12.bothF_REML$gam, select=1, data=lag12par, gg=TRUE)+ theme_bw() + 
+  theme(title = element_blank()) 
+plot13 <- draw(lag13.bothF_REML$gam, select=1, data=lag13par, gg=TRUE) + theme_bw() + 
+  theme(title = element_blank())
+plot14 <- draw(lag14.bothF_REML$gam, select=1, data=lag14par, gg=TRUE)+ theme_bw() + 
+  theme(title = element_blank()) 
+plot15 <- draw(lag15.bothF_REML$gam, select=1, data=lag15par, gg=TRUE) + theme_bw() + theme(title=element_blank())
+
+plot1 + plot2 + plot3 + plot4 + plot5 +
+  plot6 + plot7 + plot8 + plot9 + plot10 +
+  plot11 + plot12 + plot13 + plot14 + plot15 +
+  plot_layout(nrow=5, ncol=3)
 
 #Back simulations----------------------------------------------------------------------------
 
@@ -1244,7 +1309,6 @@ back_plot_se$age <- as.numeric(as.character(back_plot_se$age))
 
 back_plot_dat <- left_join(back_plot_pred, back_plot_se, by=c("LONGITUDE", "LATITUDE", "cohort", "covar", "age"))
 #
-
 
 
 p1 <- ggplot(back_plot_dat, aes(value, covar)) + geom_point() + geom_errorbar(aes(xmin=(value-SE),
