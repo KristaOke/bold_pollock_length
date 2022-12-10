@@ -330,7 +330,9 @@ spawners_dat$SPa <- spawners_dat$N_at_age*spawners_dat$Pmat*spawners_dat$mass_at
  ggplot(mean_parent_Fs, aes(Year, weighted_parent_mean_F)) + geom_point() + geom_line() #gut check this
   
   ggplot(mean_parent_Fs, aes(as.numeric(as.character(Year)), weighted_parent_mean_F)) + geom_point() + 
-    geom_line() + xlab("Year") + ylab("Weighted mean parent F")#gut check this
+    geom_line() + xlab("Year") + ylab("Weighted mean parent fishing intensity") +
+    geom_vline(xintercept=1987, 
+               color = "red", size=0.25) + theme_bw()
   
   
   #then link offspring cohort to year - ie 2000 parent weighted F linked to fish born in 2000

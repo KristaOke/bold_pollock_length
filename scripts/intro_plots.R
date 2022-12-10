@@ -79,6 +79,7 @@ ggplot(covar_byage_sub[which(covar_byage_sub$covariate=="weighted_parent_mean_F"
   facet_wrap(~AGE)
 
 
+
 ggplot(covar_byage_sub[which(covar_byage_sub$AGE!=0 &
   covar_byage_sub$covariate=="pollock_survey_abun_mil_at_age"),], aes(as.numeric(as.character(YEAR)), value)) + geom_point() + geom_line() +
   facet_wrap(~AGE, ncol=5) + xlab("Year") + ylab("Abundance-at-age (millions)") +
