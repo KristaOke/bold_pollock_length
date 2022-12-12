@@ -1088,9 +1088,6 @@ plot1 + plot2 + plot3 + plot4 + plot5 +
 
 #Back simulations----------------------------------------------------------------------------
 
-#maybe start by getting SDs, confiriming that scale did the same as Curry did
-#then create a loop that will make 2 new datasets without response variable, 
-#add 1 SD to one and subtract 1 SD from other, use predict (how to deal with random?) 
 
 names(lag1par)
 
