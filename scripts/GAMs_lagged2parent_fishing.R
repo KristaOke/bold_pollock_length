@@ -206,8 +206,8 @@ lag1.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE
                   pollock_survey_abun_mil_at_age_scaled +
                   apex_pred_biom_scaled + 
                   forage_fish_biom_scaled + 
-                  pelagic_forager_biom_scaled +
-                  s(cohort, bs="re"),
+                  pelagic_forager_biom_scaled, #+
+                  #s(cohort, bs="re"),
                 random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag1par )
 gam.check(lag1.bothF$gam) #not bad
 summary(lag1.bothF$gam) #
@@ -233,8 +233,8 @@ lag2.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag2par )
 gam.check(lag2.bothF$gam) #not bad
 summary(lag2.bothF$gam) #
@@ -271,8 +271,8 @@ lag3.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                     # s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag3par )
 gam.check(lag3.bothF$gam) #not bad
 summary(lag3.bothF$gam) #
@@ -307,8 +307,8 @@ lag4.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag4par )
 gam.check(lag4.bothF$gam) #not bad
 summary(lag4.bothF$gam) #
@@ -345,8 +345,8 @@ lag5.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                     # s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag5par )
 gam.check(lag5.bothF$gam) #not bad
 summary(lag5.bothF$gam) #
@@ -385,8 +385,8 @@ lag6.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag6par )
 gam.check(lag6.bothF$gam) #not bad
 summary(lag6.bothF$gam) #
@@ -423,8 +423,8 @@ lag7.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                     # s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag7par )
 gam.check(lag7.bothF$gam) #not bad
 summary(lag7.bothF$gam) #
@@ -458,8 +458,8 @@ lag8.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                     # s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag8par )
 gam.check(lag8.bothF$gam) #not bad
 summary(lag8.bothF$gam) #
@@ -495,8 +495,8 @@ lag9.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag9par )
 gam.check(lag9.bothF$gam) #not bad
 summary(lag9.bothF$gam) #
@@ -534,8 +534,8 @@ lag10.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag10par )
 gam.check(lag10.bothF$gam) #not bad
 summary(lag10.bothF$gam) #
@@ -572,8 +572,8 @@ lag11.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled, #+
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag11par )
 gam.check(lag11.bothF$gam) #not bad
 summary(lag11.bothF$gam) #
@@ -605,8 +605,8 @@ lag12.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled, #+
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag12par )
 gam.check(lag12.bothF$gam) #not bad
 summary(lag12.bothF$gam) #
@@ -640,8 +640,8 @@ lag13.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled,# +
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag13par )
 gam.check(lag13.bothF$gam) #not bad
 summary(lag13.bothF$gam) #
@@ -676,8 +676,8 @@ lag14.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled, #+
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag14par )
 gam.check(lag14.bothF$gam) #not bad
 summary(lag14.bothF$gam) #
@@ -711,8 +711,8 @@ lag15.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled, #+
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag15par )
 gam.check(lag15.bothF$gam) #not bad
 summary(lag15.bothF$gam) #
@@ -747,8 +747,8 @@ lag1.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONG
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                     # s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag1par )
 gam.check(lag1.bothF_REML$gam) #not bad
 summary(lag1.bothF_REML$gam) #
@@ -764,8 +764,8 @@ lag2.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONG
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag2par )
 gam.check(lag2.bothF_REML$gam) #not bad
 summary(lag2.bothF_REML$gam) #
@@ -783,8 +783,8 @@ lag3.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONG
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                     # s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag3par )
 gam.check(lag3.bothF_REML$gam) #not bad
 summary(lag3.bothF_REML$gam) #
@@ -802,8 +802,8 @@ lag4.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONG
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                     # s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag4par )
 gam.check(lag4.bothF_REML$gam) #not bad
 summary(lag4.bothF_REML$gam) #
@@ -823,8 +823,8 @@ lag5.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONG
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                     # s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag5par )
 gam.check(lag5.bothF_REML$gam) #not bad
 summary(lag5.bothF_REML$gam) #
@@ -844,8 +844,8 @@ lag6.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONG
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                     # s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag6par )
 gam.check(lag6.bothF_REML$gam) #not bad
 summary(lag6.bothF_REML$gam) #
@@ -866,8 +866,8 @@ lag7.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONG
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                     # s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag7par )
 gam.check(lag7.bothF_REML$gam) #not bad
 summary(lag7.bothF_REML$gam) #
@@ -885,8 +885,8 @@ lag8.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONG
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                     # s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag8par )
 gam.check(lag8.bothF_REML$gam) #not bad
 summary(lag8.bothF_REML$gam) #
@@ -906,8 +906,8 @@ lag9.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONG
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag9par )
 gam.check(lag9.bothF_REML$gam) #not bad
 summary(lag9.bothF_REML$gam) #
@@ -925,8 +925,8 @@ lag10.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled, #+
+                      # s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag10par )
 gam.check(lag10.bothF_REML$gam) #not bad
 summary(lag10.bothF_REML$gam) #
@@ -947,8 +947,8 @@ lag11.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled, #+
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag11par )
 gam.check(lag11.bothF_REML$gam) #not bad
 summary(lag11.bothF_REML$gam) #
@@ -964,8 +964,8 @@ lag12.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled, #+
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag12par )
 gam.check(lag12.bothF_REML$gam) #not bad
 summary(lag12.bothF_REML$gam) #
@@ -983,8 +983,8 @@ lag13.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled, #+
+                      # s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag13par )
 gam.check(lag13.bothF_REML$gam) #not bad
 summary(lag13.bothF_REML$gam) #
@@ -1003,8 +1003,8 @@ lag14.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled, #+
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag14par )
 gam.check(lag14.bothF_REML$gam) #not bad
 summary(lag14.bothF_REML$gam) #
@@ -1022,8 +1022,8 @@ lag15.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled, #+
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag15par )
 gam.check(lag15.bothF_REML$gam) #not bad
 summary(lag15.bothF_REML$gam) #
@@ -1337,8 +1337,8 @@ long1.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       #forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled,# +
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag1par )
 gam.check(long1.bothF$gam) #not bad
 summary(long1.bothF$gam) #
@@ -1363,8 +1363,8 @@ long2.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                      # forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled,# +
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag2par )
 gam.check(long2.bothF$gam) #not bad
 summary(long2.bothF$gam) #
@@ -1401,8 +1401,8 @@ long3.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       #forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled, #+
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag3par )
 gam.check(long3.bothF$gam) #not bad
 summary(long3.bothF$gam) #
@@ -1437,8 +1437,8 @@ long4.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                      # forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled,# +
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag4par )
 gam.check(long4.bothF$gam) #not bad
 summary(long4.bothF$gam) #
@@ -1475,8 +1475,8 @@ long5.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                     #  forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled,# +
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag5par )
 gam.check(long5.bothF$gam) #not bad
 summary(long5.bothF$gam) #
@@ -1515,8 +1515,8 @@ long6.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       #forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled,# +
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag6par )
 gam.check(long6.bothF$gam) #not bad
 summary(long6.bothF$gam) #
@@ -1553,8 +1553,8 @@ long7.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       #forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled,# +
+                     # s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag7par )
 gam.check(long7.bothF$gam) #not bad
 summary(long7.bothF$gam) #
@@ -1588,8 +1588,8 @@ long8.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       #forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled,# +
+                      #s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag8par )
 gam.check(long8.bothF$gam) #not bad
 summary(long8.bothF$gam) #
@@ -1625,8 +1625,8 @@ long9.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUD
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       #forage_fish_biom_scaled + 
-                      pelagic_forager_biom_scaled +
-                      s(cohort, bs="re"),
+                      pelagic_forager_biom_scaled,# +
+                     # s(cohort, bs="re"),
                     random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag9par )
 gam.check(long9.bothF$gam) #not bad
 summary(long9.bothF$gam) #
@@ -1664,8 +1664,8 @@ long10.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITU
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        #forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled,# +
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag10par )
 gam.check(long10.bothF$gam) #not bad
 summary(long10.bothF$gam) #
@@ -1702,8 +1702,8 @@ long11.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITU
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                       # forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled,# +
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag11par )
 gam.check(long11.bothF$gam) #not bad
 summary(long11.bothF$gam) #
@@ -1735,8 +1735,8 @@ long12.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITU
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        #forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled,# +
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag12par )
 gam.check(long12.bothF$gam) #not bad
 summary(long12.bothF$gam) #
@@ -1770,8 +1770,8 @@ long13.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITU
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                        #forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled,# +
+                      # s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag13par )
 gam.check(long13.bothF$gam) #not bad
 summary(long13.bothF$gam) #
@@ -1806,8 +1806,8 @@ long14.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITU
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                      #  forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled,# +
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag14par )
 gam.check(long14.bothF$gam) #not bad
 summary(long14.bothF$gam) #
@@ -1841,8 +1841,8 @@ long15.bothF <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITU
                        pollock_survey_abun_mil_at_age_scaled +
                        apex_pred_biom_scaled + 
                       # forage_fish_biom_scaled + 
-                       pelagic_forager_biom_scaled +
-                       s(cohort, bs="re"),
+                       pelagic_forager_biom_scaled,# +
+                       #s(cohort, bs="re"),
                      random=~(1|YEAR/HAUL),  REML=FALSE,  data=lag15par )
 gam.check(long15.bothF$gam) #not bad
 summary(long15.bothF$gam) #
@@ -1877,8 +1877,8 @@ long1.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                            pollock_survey_abun_mil_at_age_scaled +
                            apex_pred_biom_scaled + 
                           # forage_fish_biom_scaled + 
-                           pelagic_forager_biom_scaled +
-                           s(cohort, bs="re"),
+                           pelagic_forager_biom_scaled,# +
+                          # s(cohort, bs="re"),
                          random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag1par )
 gam.check(long1.bothF_REML$gam) #not bad
 summary(long1.bothF_REML$gam) #
@@ -1894,8 +1894,8 @@ long2.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                            pollock_survey_abun_mil_at_age_scaled +
                            apex_pred_biom_scaled + 
                           # forage_fish_biom_scaled + 
-                           pelagic_forager_biom_scaled +
-                           s(cohort, bs="re"),
+                           pelagic_forager_biom_scaled,# +
+                           #s(cohort, bs="re"),
                          random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag2par )
 gam.check(long2.bothF_REML$gam) #not bad
 summary(long2.bothF_REML$gam) #
@@ -1913,8 +1913,8 @@ long3.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                            pollock_survey_abun_mil_at_age_scaled +
                            apex_pred_biom_scaled + 
                           # forage_fish_biom_scaled + 
-                           pelagic_forager_biom_scaled +
-                           s(cohort, bs="re"),
+                           pelagic_forager_biom_scaled ,#+
+                          # s(cohort, bs="re"),
                          random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag3par )
 gam.check(long3.bothF_REML$gam) #not bad
 summary(long3.bothF_REML$gam) #
@@ -1932,8 +1932,8 @@ long4.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                            pollock_survey_abun_mil_at_age_scaled +
                            apex_pred_biom_scaled + 
                          #  forage_fish_biom_scaled + 
-                           pelagic_forager_biom_scaled +
-                           s(cohort, bs="re"),
+                           pelagic_forager_biom_scaled,# +
+                           #s(cohort, bs="re"),
                          random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag4par )
 gam.check(long4.bothF_REML$gam) #not bad
 summary(long4.bothF_REML$gam) #
@@ -1953,8 +1953,8 @@ long5.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                            pollock_survey_abun_mil_at_age_scaled +
                            apex_pred_biom_scaled + 
                         #   forage_fish_biom_scaled + 
-                           pelagic_forager_biom_scaled +
-                           s(cohort, bs="re"),
+                           pelagic_forager_biom_scaled,# +
+                           #s(cohort, bs="re"),
                          random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag5par )
 gam.check(long5.bothF_REML$gam) #not bad
 summary(long5.bothF_REML$gam) #
@@ -1974,8 +1974,8 @@ long6.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                            pollock_survey_abun_mil_at_age_scaled +
                            apex_pred_biom_scaled + 
                           # forage_fish_biom_scaled + 
-                           pelagic_forager_biom_scaled +
-                           s(cohort, bs="re"),
+                           pelagic_forager_biom_scaled,# +
+                           #s(cohort, bs="re"),
                          random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag6par )
 gam.check(long6.bothF_REML$gam) #not bad
 summary(long6.bothF_REML$gam) #
@@ -1996,8 +1996,8 @@ long7.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                            pollock_survey_abun_mil_at_age_scaled +
                            apex_pred_biom_scaled + 
                          #  forage_fish_biom_scaled + 
-                           pelagic_forager_biom_scaled +
-                           s(cohort, bs="re"),
+                           pelagic_forager_biom_scaled,# +
+                           #s(cohort, bs="re"),
                          random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag7par )
 gam.check(long7.bothF_REML$gam) #not bad
 summary(long7.bothF_REML$gam) #
@@ -2015,8 +2015,8 @@ long8.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                            pollock_survey_abun_mil_at_age_scaled +
                            apex_pred_biom_scaled + 
                           # forage_fish_biom_scaled + 
-                           pelagic_forager_biom_scaled +
-                           s(cohort, bs="re"),
+                           pelagic_forager_biom_scaled,# +
+                          # s(cohort, bs="re"),
                          random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag8par )
 gam.check(long8.bothF_REML$gam) #not bad
 summary(long8.bothF_REML$gam) #
@@ -2036,8 +2036,8 @@ long9.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LON
                            pollock_survey_abun_mil_at_age_scaled +
                            apex_pred_biom_scaled + 
                           # forage_fish_biom_scaled + 
-                           pelagic_forager_biom_scaled +
-                           s(cohort, bs="re"),
+                           pelagic_forager_biom_scaled,# +
+                           #s(cohort, bs="re"),
                          random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag9par )
 gam.check(long9.bothF_REML$gam) #not bad
 summary(long9.bothF_REML$gam) #
@@ -2055,8 +2055,8 @@ long10.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LO
                             pollock_survey_abun_mil_at_age_scaled +
                             apex_pred_biom_scaled + 
                            # forage_fish_biom_scaled + 
-                            pelagic_forager_biom_scaled +
-                            s(cohort, bs="re"),
+                            pelagic_forager_biom_scaled,# +
+                           # s(cohort, bs="re"),
                           random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag10par )
 gam.check(long10.bothF_REML$gam) #not bad
 summary(long10.bothF_REML$gam) #
@@ -2077,8 +2077,8 @@ long11.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LO
                             pollock_survey_abun_mil_at_age_scaled +
                             apex_pred_biom_scaled + 
                          #   forage_fish_biom_scaled + 
-                            pelagic_forager_biom_scaled +
-                            s(cohort, bs="re"),
+                            pelagic_forager_biom_scaled,# +
+                            #s(cohort, bs="re"),
                           random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag11par )
 gam.check(long11.bothF_REML$gam) #not bad
 summary(long11.bothF_REML$gam) #
@@ -2094,8 +2094,8 @@ long12.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LO
                             pollock_survey_abun_mil_at_age_scaled +
                             apex_pred_biom_scaled + 
                            # forage_fish_biom_scaled + 
-                            pelagic_forager_biom_scaled +
-                            s(cohort, bs="re"),
+                            pelagic_forager_biom_scaled,# +
+                           # s(cohort, bs="re"),
                           random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag12par )
 gam.check(long12.bothF_REML$gam) #not bad
 summary(long12.bothF_REML$gam) #
@@ -2113,8 +2113,8 @@ long13.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LO
                             pollock_survey_abun_mil_at_age_scaled +
                             apex_pred_biom_scaled + 
                           #  forage_fish_biom_scaled + 
-                            pelagic_forager_biom_scaled +
-                            s(cohort, bs="re"),
+                            pelagic_forager_biom_scaled,# +
+                           # s(cohort, bs="re"),
                           random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag13par )
 gam.check(long13.bothF_REML$gam) #not bad
 summary(long13.bothF_REML$gam) #
@@ -2133,8 +2133,8 @@ long14.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LO
                             pollock_survey_abun_mil_at_age_scaled +
                             apex_pred_biom_scaled + 
                            # forage_fish_biom_scaled + 
-                            pelagic_forager_biom_scaled +
-                            s(cohort, bs="re"),
+                            pelagic_forager_biom_scaled,# +
+                            #s(cohort, bs="re"),
                           random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag14par )
 gam.check(long14.bothF_REML$gam) #not bad
 summary(long14.bothF_REML$gam) #
@@ -2152,8 +2152,8 @@ long15.bothF_REML <- gamm4(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LO
                             pollock_survey_abun_mil_at_age_scaled +
                             apex_pred_biom_scaled + 
                            # forage_fish_biom_scaled + 
-                            pelagic_forager_biom_scaled +
-                            s(cohort, bs="re"),
+                            pelagic_forager_biom_scaled,# +
+                           # s(cohort, bs="re"),
                           random=~(1|YEAR/HAUL),  REML=TRUE,  data=lag15par )
 gam.check(long15.bothF_REML$gam) #not bad
 summary(long15.bothF_REML$gam) #
