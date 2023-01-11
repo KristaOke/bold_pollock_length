@@ -189,6 +189,12 @@ v5 <- ggplot(mean_len_join[which(mean_len_join$AGE==13|
 
 plot_grid(v1, v2, v3, v4, v5, ncol=1)
 
+ggdraw() +
+  draw_plot(v1, 0, .76, 1, .24) +
+  draw_plot(v2, 0, .565, 1, .24) +
+  draw_plot(v3, 0, .375, 1, .24) +
+  draw_plot(v4, 0, .175, 1, .24) +
+  draw_plot(v5, 0, 0, 1, .24)
 
 #GAMs w prev yr prev age AND mean parent F-----
 
@@ -1052,34 +1058,35 @@ visreg(lag14.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag14par, ylab=""
 visreg(lag15.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag15par, ylab="")
 
 plot1 <- draw(lag1.bothF_REML$gam, select=1, title="", data=lag1par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) 
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 plot2 <- draw(lag2.bothF_REML$gam, select=1, data=lag2par, gg=TRUE) + theme_bw() + 
-  theme(title = element_blank())
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 plot3 <- draw(lag3.bothF_REML$gam, select=1, title="", data=lag3par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) 
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 plot4 <- draw(lag4.bothF_REML$gam, select=1, data=lag4par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) 
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 plot5 <- draw(lag5.bothF_REML$gam, select=1, title="", data=lag5par, gg=TRUE) + theme_bw() + 
-  theme(title = element_blank())
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 plot6 <- draw(lag6.bothF_REML$gam, select=1, data=lag6par, gg=TRUE) + theme_bw() + 
-  theme(title = element_blank())
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 plot7 <- draw(lag7.bothF_REML$gam, select=1, title="", data=lag7par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) 
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 plot8 <- draw(lag8.bothF_REML$gam, select=1, data=lag8par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) 
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 plot9 <- draw(lag9.bothF_REML$gam, select=1, title="", data=lag9par, gg=TRUE) + theme_bw() + 
-  theme(title = element_blank())
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 plot10 <- draw(lag10.bothF_REML$gam, select=1, data=lag10par, gg=TRUE) + theme_bw() + 
-  theme(title = element_blank())
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 plot11 <- draw(lag11.bothF_REML$gam, select=1, data=lag11par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) 
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 plot12 <- draw(lag12.bothF_REML$gam, select=1, data=lag12par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) 
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 plot13 <- draw(lag13.bothF_REML$gam, select=1, data=lag13par, gg=TRUE) + theme_bw() + 
-  theme(title = element_blank())
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 plot14 <- draw(lag14.bothF_REML$gam, select=1, data=lag14par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) 
-plot15 <- draw(lag15.bothF_REML$gam, select=1, data=lag15par, gg=TRUE) + theme_bw() + theme(title=element_blank())
+  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+plot15 <- draw(lag15.bothF_REML$gam, select=1, data=lag15par, gg=TRUE) + theme_bw() + 
+  theme(title=element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
 
 plot1 + plot2 + plot3 + plot4 + plot5 +
   plot6 + plot7 + plot8 + plot9 + plot10 +
