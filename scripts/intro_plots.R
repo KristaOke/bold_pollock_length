@@ -35,6 +35,17 @@ ggplot(data = world) +
   # scale_colour_gradient2(low="blue", high="red", guide="colorbar") + 
   geom_point(aes(LONGITUDE, LATITUDE), size=0.2, data=datwparents) + theme_bw() 
 
+#poster map
+
+ggplot(data = world) +
+  geom_sf() +
+  coord_sf(xlim = c(-178, -155), ylim = c(53, 62.1), expand = TRUE) +
+  annotation_scale(location = "bl", width_hint = 0.5) +
+  # geom_point(aes(LONGITUDE, LATITUDE, colour=mean_station_bottemp), data=all_analysis_dat) +   
+  # scale_colour_gradient2(low="blue", high="red", guide="colorbar") + 
+  geom_point(aes(LONGITUDE, LATITUDE), size=0.2, data=datwparents) + theme_bw() +
+  xlab("Longitude") + ylab("Latitude")
+
 #covars plot====
 
 #hmm let's do this with NONscaled since they are scaled by age!
