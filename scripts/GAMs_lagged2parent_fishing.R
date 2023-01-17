@@ -106,38 +106,79 @@ p1 <- ggplot(mean_len_join[which(mean_len_join$AGE==1 | mean_len_join$AGE==2 |
   facet_wrap(~AGE, ncol=3) +
   geom_smooth(method="lm") + 
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
-  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4)) + scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
+  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4)) + ylim(c(100,400)) + scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 p2 <- ggplot(mean_len_join[which(mean_len_join$AGE==4 | mean_len_join$AGE==5 |
                                    mean_len_join$AGE==6),], aes(mean_weight_parentF_scaled, mean_ann_length)) + geom_point(aes(col=period)) + 
   facet_wrap(~AGE, ncol=3) +
   geom_smooth(method="lm") + 
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
-  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4))+ scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
+  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4))+ ylim(c(300,600))+ scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 p3 <- ggplot(mean_len_join[which(mean_len_join$AGE==7 | mean_len_join$AGE==8 |
                                    mean_len_join$AGE==9),], aes(mean_weight_parentF_scaled, mean_ann_length)) + geom_point(aes(col=period)) + 
   facet_wrap(~AGE, ncol=3) +
   geom_smooth(method="lm") + 
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
-  ylab("Annual mean length (mm)") + xlab("") + theme_bw() +xlim(c(-2,4))+ scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
+  ylab("Annual mean length (mm)") + xlab("") + theme_bw() +xlim(c(-2,4))+ ylim(c(400,700))+ scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 p4 <- ggplot(mean_len_join[which(mean_len_join$AGE==10 | mean_len_join$AGE==11 |
                                    mean_len_join$AGE==12),], aes(mean_weight_parentF_scaled, mean_ann_length)) + geom_point(aes(col=period)) + 
   facet_wrap(~AGE, ncol=3) +
   geom_smooth(method="lm") +
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
-  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4))+ scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
+  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4))+ ylim(c(500,800))+ scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 p5 <- ggplot(mean_len_join[which(mean_len_join$AGE==13 | mean_len_join$AGE==14 |
                                    mean_len_join$AGE==15),], aes(mean_weight_parentF_scaled, mean_ann_length)) + geom_point(aes(col=period)) + 
-  facet_wrap(~AGE, ncol=3) + theme_bw() +
+  facet_wrap(~AGE, ncol=3) + 
   geom_smooth(method="lm") +  
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))+
-  ylab("") + xlab("Mean weighted fishing intensity on parents") +xlim(c(-2,4))+ scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
+  ylab("") + xlab("Mean weighted fishing intensity on parents") + theme_bw() +xlim(c(-2,4))+ ylim(c(500,800))+ scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 
 plot_grid(p1, p2, p3, p4, p5, ncol=1)
+
+
+ggdraw() +
+  draw_plot(p1, 0, .76, 1, .23) +
+  draw_plot(p2, 0, .57, 1, .23) +
+  draw_plot(p3, 0, .38, 1, .23) +
+  draw_plot(p4, 0, .19, 1, .23) +
+  draw_plot(p5, 0, 0, 1, .23) #finally well spaced!
+
+
+#wider for presentations--
+w1 <- ggplot(mean_len_join[which(mean_len_join$AGE==1 | mean_len_join$AGE==2 |
+                                   mean_len_join$AGE==3| mean_len_join$AGE==4 | mean_len_join$AGE==5 ),], aes(mean_weight_parentF_scaled, mean_ann_length)) + geom_point(aes(col=period)) + 
+  facet_wrap(~AGE, ncol=5) +
+  geom_smooth(method="lm") + 
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
+  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4)) + #ylim(c(100,400)) + 
+  scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
+
+w2 <- ggplot(mean_len_join[which(mean_len_join$AGE==6|mean_len_join$AGE==7 | mean_len_join$AGE==8 |
+                                   mean_len_join$AGE==9|mean_len_join$AGE==10),], aes(mean_weight_parentF_scaled, mean_ann_length)) + geom_point(aes(col=period)) + 
+  facet_wrap(~AGE, ncol=5) +
+  geom_smooth(method="lm") + 
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
+  ylab("Annual mean length (mm)") + xlab("") + theme_bw() +xlim(c(-2,4))+ #ylim(c(300,600))+ 
+  scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
+
+w3 <- ggplot(mean_len_join[which(mean_len_join$AGE==11|mean_len_join$AGE==12 | mean_len_join$AGE==13 |
+                                   mean_len_join$AGE==14|mean_len_join$AGE==15),], aes(mean_weight_parentF_scaled, mean_ann_length)) + geom_point(aes(col=period)) + 
+  facet_wrap(~AGE, ncol=5) +
+  geom_smooth(method="lm") + 
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
+  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4))+ #ylim(c(400,700))+ 
+  scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
+
+
+ggdraw() +
+  draw_plot(w1, 0, .6, 1, .4) +
+  draw_plot(w2, 0, .3, 1, .4) +
+  draw_plot(w3, 0, 0, 1, .4) 
+
 
 
 
@@ -160,41 +201,97 @@ ggplot(mean_len_join[which(mean_len_join$AGE!=0),], aes(prevyr_prevage_F_scaled,
 v1 <- ggplot(mean_len_join[which(mean_len_join$AGE==1|
                                    mean_len_join$AGE==2|
                                    mean_len_join$AGE==3),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point(aes(col=period)) + facet_wrap(~AGE, ncol=3) +
-  geom_smooth(method="lm") +theme_bw()+
+  geom_smooth(method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(200,500))+
   ylab("") + xlab("") + scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 v2 <- ggplot(mean_len_join[which(mean_len_join$AGE==4|
                                    mean_len_join$AGE==5|
                                    mean_len_join$AGE==6),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point(aes(col=period)) + facet_wrap(~AGE, ncol=3) +
-  geom_smooth(method="lm") +theme_bw()+
+  geom_smooth(method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(300,600))+
   ylab("") + xlab("") + scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 v3 <- ggplot(mean_len_join[which(mean_len_join$AGE==7|
                                    mean_len_join$AGE==8|
                                    mean_len_join$AGE==9),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point(aes(col=period)) + facet_wrap(~AGE, ncol=3) +
-  geom_smooth(method="lm") +theme_bw()+
+  geom_smooth(method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(400,700))+
   ylab("Annual mean length (mm)") + xlab("") + scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 v4 <- ggplot(mean_len_join[which(mean_len_join$AGE==10|
                                    mean_len_join$AGE==11|
                                    mean_len_join$AGE==12),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point(aes(col=period)) + facet_wrap(~AGE, ncol=3) +
-  geom_smooth(method="lm") +theme_bw()+
+  geom_smooth(method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(400,700))+
   ylab("") + xlab("") + scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 v5 <- ggplot(mean_len_join[which(mean_len_join$AGE==13|
                                    mean_len_join$AGE==14|
                                    mean_len_join$AGE==15),], aes(prevyr_prevage_F_scaled, mean_ann_length)) +  geom_point(aes(col=period)) + facet_wrap(~AGE,  ncol=3) +
-  geom_smooth(method="lm") +theme_bw()+
+  geom_smooth(method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(500,800))+
   ylab("") + xlab("Fishing intensity on cohort in previous year") + scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
 
 plot_grid(v1, v2, v3, v4, v5, ncol=1)
 
 ggdraw() +
-  draw_plot(v1, 0, .76, 1, .24) +
-  draw_plot(v2, 0, .565, 1, .24) +
-  draw_plot(v3, 0, .375, 1, .24) +
-  draw_plot(v4, 0, .175, 1, .24) +
-  draw_plot(v5, 0, 0, 1, .24)
+  draw_plot(v1, 0, .76, 1, .23) +
+  draw_plot(v2, 0, .57, 1, .23) +
+  draw_plot(v3, 0, .38, 1, .23) +
+  draw_plot(v4, 0, .19, 1, .23) +
+  draw_plot(v5, 0, 0, 1, .23) #finally well spaced!
+
+
+#can I combine these plots?
+
+names(mean_len_join)
+plottingsub <- mean_len_join[,c(3,10,49,53:55)]
+plottinglong <- plottingsub %>% pivot_longer(-c(YEAR, AGE, period, mean_ann_length), names_to = "covar", values_to = "scaled_value")
+
+plottinglong <- plottinglong[,plottinglong$period=="After 1987"]
+
+b1 <- ggplot(plottinglong[which(plottinglong$AGE==1|
+                                  plottinglong$AGE==2|
+                                  plottinglong$AGE==3),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar)) + 
+  facet_wrap(~AGE, ncol=3) +
+  geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(100,500))+
+  ylab("") + xlab("") + scale_colour_manual(values=c("black", "dark green")) +
+  theme(legend.position = "none")
+
+b2 <- ggplot(plottinglong[which(plottinglong$AGE==4|
+                                  plottinglong$AGE==5|
+                                  plottinglong$AGE==6),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar)) + 
+  facet_wrap(~AGE, ncol=3) +
+  geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(300,600))+
+  ylab("") + xlab("") + scale_colour_manual(values=c("black", "dark green")) +
+  theme(legend.position = "none")
+
+b3 <- ggplot(plottinglong[which(plottinglong$AGE==7|
+                                  plottinglong$AGE==8|
+                                  plottinglong$AGE==9),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar)) + 
+  facet_wrap(~AGE, ncol=3) +
+  geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(400,700))+
+  ylab("") + xlab("") + scale_colour_manual(values=c("black", "dark green")) +
+  theme(legend.position = "none")
+
+b4 <- ggplot(plottinglong[which(plottinglong$AGE==10|
+                                  plottinglong$AGE==11|
+                                  plottinglong$AGE==12),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar)) + 
+  facet_wrap(~AGE, ncol=3) +
+  geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(500,800))+
+  ylab("") + xlab("") + scale_colour_manual(values=c("black", "dark green")) +
+  theme(legend.position = "none")
+
+b5 <- ggplot(plottinglong[which(plottinglong$AGE==13|
+                                  plottinglong$AGE==14|
+                                  plottinglong$AGE==15),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar)) + 
+  facet_wrap(~AGE, ncol=3) +
+  geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(500,800))+
+  ylab("") + xlab("") + scale_colour_manual(values=c("black", "dark green")) +
+  theme(legend.position = "none")
+
+ggdraw() +
+  draw_plot(b1, 0, .76, 1, .23) +
+  draw_plot(b2, 0, .57, 1, .23) +
+  draw_plot(b3, 0, .38, 1, .23) +
+  draw_plot(b4, 0, .19, 1, .23) +
+  draw_plot(b5, 0, 0, 1, .23)
 
 #GAMs w prev yr prev age AND mean parent F-----
 
@@ -1058,40 +1155,47 @@ visreg(lag14.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag14par, ylab=""
 visreg(lag15.bothF_REML$gam, xvar="south.sst.amj.scaled", data=lag15par, ylab="")
 
 plot1 <- draw(lag1.bothF_REML$gam, select=1, title="", data=lag1par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot2 <- draw(lag2.bothF_REML$gam, select=1, data=lag2par, gg=TRUE) + theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot3 <- draw(lag3.bothF_REML$gam, select=1, title="", data=lag3par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot4 <- draw(lag4.bothF_REML$gam, select=1, data=lag4par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot5 <- draw(lag5.bothF_REML$gam, select=1, title="", data=lag5par, gg=TRUE) + theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot6 <- draw(lag6.bothF_REML$gam, select=1, data=lag6par, gg=TRUE) + theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot7 <- draw(lag7.bothF_REML$gam, select=1, title="", data=lag7par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot8 <- draw(lag8.bothF_REML$gam, select=1, data=lag8par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot9 <- draw(lag9.bothF_REML$gam, select=1, title="", data=lag9par, gg=TRUE) + theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot10 <- draw(lag10.bothF_REML$gam, select=1, data=lag10par, gg=TRUE) + theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot11 <- draw(lag11.bothF_REML$gam, select=1, data=lag11par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot12 <- draw(lag12.bothF_REML$gam, select=1, data=lag12par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot13 <- draw(lag13.bothF_REML$gam, select=1, data=lag13par, gg=TRUE) + theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot14 <- draw(lag14.bothF_REML$gam, select=1, data=lag14par, gg=TRUE)+ theme_bw() + 
-  theme(title = element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title = element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 plot15 <- draw(lag15.bothF_REML$gam, select=1, data=lag15par, gg=TRUE) + theme_bw() + 
-  theme(title=element_blank()) + coord_cartesian(ylim = c(-1.5, 1))
+  theme(title=element_blank(), plot.margin = unit(c(0, 0, 0, 0.1), "cm")) + coord_cartesian(ylim = c(-1.5, 1))
 
 plot1 + plot2 + plot3 + plot4 + plot5 +
   plot6 + plot7 + plot8 + plot9 + plot10 +
   plot11 + plot12 + plot13 + plot14 + plot15 +
   plot_layout(nrow=5, ncol=3)
+
+#for presentation---
+
+plot1 + plot2 + plot3 + plot4 + plot5 +
+  plot6 + plot7 + plot8 + plot9 + plot10 +
+  plot11 + plot12 + plot13 + plot14 + plot15 +
+  plot_layout(nrow=3, ncol=5)
 
 #Back simulations----------------------------------------------------------------------------
 
@@ -2170,10 +2274,194 @@ plot(long15.bothF_REML$gam)
 
 
 
+#FDR-------------------------------------------------------------------------
+
+
+#Mike suggested accounting for multiple testing using the FDR procedure from 
+#Verhoeven et al 2005
+
+#tried looping, didn't work, let's do this the painful way
+
+covars_age1 <- c("mean_weight_parentF_scaled ", "pollock_survey_abun_mil_at_age_scaled",
+                 "apex_pred_biom_scaled", "forage_fish_biom_scaled", "pelagic_forager_biom_scaled")
+covars_all_ages <- c("mean_weight_parentF_scaled ", "prevyr_prevage_F_scaled", 
+                     "pollock_survey_abun_mil_at_age_scaled",
+                     "apex_pred_biom_scaled", "forage_fish_biom_scaled", "pelagic_forager_biom_scaled")
+smooths <- c("s(south.sst.amj.scaled)", "t2(LONGITUDE,LATITUDE)", "s(julian_scaled)")
+
+
+summary1 <- summary(lag1.bothF_REML$gam)
+summary1$p.pv #linear p values with titles AND intercept
+summary1$pTerms.pv #linear p values with titles NO intercept
+summary1$s.pv #smooth p values
+
+pvalues_age1 <- c(as.vector(summary1$pTerms.pv), as.vector(summary1$s.pv))
+namesvec1 <- c(covars_age1, smooths)
+ages_vec1 <- rep(1, times=length(namesvec1))
+df1 <- data.frame(pvalues_age1, namesvec1, ages_vec1)
+colnames(df1) <- c("pvalue", "covar", "age")
+
+#age2---
+summary2 <- summary(lag2.bothF_REML$gam)
+
+pvalues_age2 <- c(as.vector(summary2$pTerms.pv), as.vector(summary2$s.pv))
+namesvec2 <- c(covars_all_ages, smooths)
+ages_vec2 <- rep(2, times=length(namesvec2))
+df2 <- data.frame(pvalues_age2, namesvec2, ages_vec2)
+colnames(df2) <- c("pvalue", "covar", "age")
+
+#age3---
+summary3 <- summary(lag3.bothF_REML$gam)
+
+pvalues_age3 <- c(as.vector(summary3$pTerms.pv), as.vector(summary3$s.pv))
+namesvec3 <- c(covars_all_ages, smooths)
+ages_vec3 <- rep(3, times=length(namesvec3))
+df3 <- data.frame(pvalues_age3, namesvec3, ages_vec3)
+colnames(df3) <- c("pvalue", "covar", "age")
+
+#age4---
+summary4 <- summary(lag4.bothF_REML$gam)
+
+pvalues_age4 <- c(as.vector(summary4$pTerms.pv), as.vector(summary4$s.pv))
+namesvec4 <- c(covars_all_ages, smooths)
+ages_vec4 <- rep(4, times=length(namesvec4))
+df4 <- data.frame(pvalues_age4, namesvec4, ages_vec4)
+colnames(df4) <- c("pvalue", "covar", "age")
+
+#age5---
+summary5 <- summary(lag5.bothF_REML$gam)
+
+pvalues_age5 <- c(as.vector(summary5$pTerms.pv), as.vector(summary5$s.pv))
+namesvec5 <- c(covars_all_ages, smooths)
+ages_vec5 <- rep(5, times=length(namesvec5))
+df5 <- data.frame(pvalues_age5, namesvec5, ages_vec5)
+colnames(df5) <- c("pvalue", "covar", "age")
+
+#age6---
+summary6 <- summary(lag6.bothF_REML$gam)
+
+pvalues_age6 <- c(as.vector(summary6$pTerms.pv), as.vector(summary6$s.pv))
+namesvec6 <- c(covars_all_ages, smooths)
+ages_vec6 <- rep(6, times=length(namesvec6))
+df6 <- data.frame(pvalues_age6, namesvec6, ages_vec6)
+colnames(df6) <- c("pvalue", "covar", "age")
+
+#age7---
+summary7 <- summary(lag7.bothF_REML$gam)
+
+pvalues_age7 <- c(as.vector(summary7$pTerms.pv), as.vector(summary7$s.pv))
+namesvec7 <- c(covars_all_ages, smooths)
+ages_vec7 <- rep(7, times=length(namesvec7))
+df7 <- data.frame(pvalues_age7, namesvec7, ages_vec7)
+colnames(df7) <- c("pvalue", "covar", "age")
+
+#age8---
+summary8 <- summary(lag8.bothF_REML$gam)
+
+pvalues_age8 <- c(as.vector(summary8$pTerms.pv), as.vector(summary8$s.pv))
+namesvec8 <- c(covars_all_ages, smooths)
+ages_vec8 <- rep(8, times=length(namesvec8))
+df8 <- data.frame(pvalues_age8, namesvec8, ages_vec8)
+colnames(df8) <- c("pvalue", "covar", "age")
+
+#age9---
+summary9 <- summary(lag9.bothF_REML$gam)
+
+pvalues_age9 <- c(as.vector(summary9$pTerms.pv), as.vector(summary9$s.pv))
+namesvec9 <- c(covars_all_ages, smooths)
+ages_vec9 <- rep(9, times=length(namesvec9))
+df9 <- data.frame(pvalues_age9, namesvec9, ages_vec9)
+colnames(df9) <- c("pvalue", "covar", "age")
+
+#age10---
+summary10 <- summary(lag10.bothF_REML$gam)
+
+pvalues_age10 <- c(as.vector(summary10$pTerms.pv), as.vector(summary10$s.pv))
+namesvec10 <- c(covars_all_ages, smooths)
+ages_vec10 <- rep(10, times=length(namesvec10))
+df10 <- data.frame(pvalues_age10, namesvec10, ages_vec10)
+colnames(df10) <- c("pvalue", "covar", "age")
+
+#age11---
+summary11 <- summary(lag11.bothF_REML$gam)
+
+pvalues_age11 <- c(as.vector(summary11$pTerms.pv), as.vector(summary11$s.pv))
+namesvec11 <- c(covars_all_ages, smooths)
+ages_vec11 <- rep(11, times=length(namesvec11))
+df11 <- data.frame(pvalues_age11, namesvec11, ages_vec11)
+colnames(df11) <- c("pvalue", "covar", "age")
+
+#age12---
+summary12 <- summary(lag12.bothF_REML$gam)
+
+pvalues_age12 <- c(as.vector(summary12$pTerms.pv), as.vector(summary12$s.pv))
+namesvec12 <- c(covars_all_ages, smooths)
+ages_vec12 <- rep(12, times=length(namesvec12))
+df12 <- data.frame(pvalues_age12, namesvec12, ages_vec12)
+colnames(df12) <- c("pvalue","covar",  "age")
+
+#age13---
+summary13 <- summary(lag13.bothF_REML$gam)
+
+pvalues_age13 <- c(as.vector(summary13$pTerms.pv), as.vector(summary13$s.pv))
+namesvec13 <- c(covars_all_ages, smooths)
+ages_vec13 <- rep(13, times=length(namesvec13))
+df13 <- data.frame(pvalues_age13, namesvec13, ages_vec13)
+colnames(df13) <- c("pvalue", "covar", "age")
+
+#age14---
+summary14 <- summary(lag14.bothF_REML$gam)
+
+pvalues_age14 <- c(as.vector(summary14$pTerms.pv), as.vector(summary14$s.pv))
+namesvec14 <- c(covars_all_ages, smooths)
+ages_vec14 <- rep(14, times=length(namesvec14))
+df14 <- data.frame(pvalues_age14, namesvec14, ages_vec14)
+colnames(df14) <- c("pvalue", "covar", "age")
+
+#age15---
+summary15 <- summary(lag15.bothF_REML$gam)
+
+pvalues_age15 <- c(as.vector(summary15$pTerms.pv), as.vector(summary15$s.pv))
+namesvec15 <- c(covars_all_ages, smooths)
+ages_vec15 <- rep(15, times=length(namesvec15))
+df15 <- data.frame(pvalues_age15, namesvec15, ages_vec15)
+colnames(df15) <- c("pvalue","covar",  "age")
+
+
+#combine
+p_values_all <- rbind(df1, df2, df3, df4, df5, df6,
+                        df7, df8, df9, df10, df11,
+                        df12, df13, df14, df15)
 
 
 
+m <- length(p_values_all$pvalue)
+alpha <- 0.05
 
+#pvec <- as.vector(c(p_As, p_Hs, p_He, p_La, p_Lp, p_Pq, p_Gm, p_Cb, p_Co))
+
+#pvec <- sort(pvec, decreasing=FALSE)
+
+p_values_ordered <- p_values_all[order(p_values_all$pvalue, decreasing = FALSE), ]
+pvec <- p_values_ordered$pvalue
+
+p_values_ordered$new_alpha <- NA
+
+i<-1
+for(i in 1:m){
+  temp_p <- pvec[i]
+  print(temp_p)
+  temp_value <- (alpha/m)*i
+  p_values_ordered$new_alpha[i] <- temp_value #
+  print(temp_value)
+  print(temp_p < temp_value)
+}
+
+#which are sig now?
+p_values_ordered$p_lessthanequalto_new <- p_values_ordered$pvalue <= p_values_ordered$new_alpha
+
+#which used to be sig?
+p_values_ordered$originally_sig <- p_values_ordered$pvalue < 0.05
 
 
 
