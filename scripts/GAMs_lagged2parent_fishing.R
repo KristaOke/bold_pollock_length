@@ -175,9 +175,56 @@ w3 <- ggplot(mean_len_join[which(mean_len_join$AGE==11|mean_len_join$AGE==12 | m
 
 
 ggdraw() +
-  draw_plot(w1, 0, .6, 1, .4) +
-  draw_plot(w2, 0, .3, 1, .4) +
-  draw_plot(w3, 0, 0, 1, .4) 
+  draw_plot(w1, 0, .6, 1, .33) +
+  draw_plot(w2, 0, .3, 1, .33) +
+  draw_plot(w3, 0, 0, 1, .33) 
+
+mean_len_join_sub <- mean_len_join[which(mean_len_join$YEAR!=1971&
+                                           mean_len_join$YEAR!=1972&
+                                           mean_len_join$YEAR!=1973&
+                                           mean_len_join$YEAR!=1974&
+                                           mean_len_join$YEAR!=1975&
+                                           mean_len_join$YEAR!=1976&
+                                           mean_len_join$YEAR!=1977&
+                                           mean_len_join$YEAR!=1978&
+                                           mean_len_join$YEAR!=1979&
+                                           mean_len_join$YEAR!=1980&
+                                           mean_len_join$YEAR!=1981&
+                                           mean_len_join$YEAR!=1982&
+                                           mean_len_join$YEAR!=1983&
+                                           mean_len_join$YEAR!=1984&
+                                           mean_len_join$YEAR!=1985&
+                                           mean_len_join$YEAR!=1986),]
+
+wc1 <- ggplot(mean_len_join_sub[which(mean_len_join_sub$AGE==1 | mean_len_join_sub$AGE==2 |
+                                   mean_len_join_sub$AGE==3| mean_len_join_sub$AGE==4 | mean_len_join_sub$AGE==5 ),], aes(prevyr_prevage_F_scaled, mean_ann_length)) + geom_point() + 
+  facet_wrap(~AGE, ncol=5) +
+  geom_smooth(method="lm") + 
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
+  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4)) + #ylim(c(100,400)) + 
+  scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
+
+wc2 <- ggplot(mean_len_join_sub[which(mean_len_join_sub$AGE==6|mean_len_join_sub$AGE==7 | mean_len_join_sub$AGE==8 |
+                                   mean_len_join_sub$AGE==9|mean_len_join_sub$AGE==10),], aes(prevyr_prevage_F_scaled, mean_ann_length)) + geom_point() + 
+  facet_wrap(~AGE, ncol=5) +
+  geom_smooth(method="lm") + 
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
+  ylab("Annual mean length (mm)") + xlab("") + theme_bw() +xlim(c(-2,4))+ #ylim(c(300,600))+ 
+  scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
+
+wc3 <- ggplot(mean_len_join_sub[which(mean_len_join_sub$AGE==11|mean_len_join_sub$AGE==12 | mean_len_join_sub$AGE==13 |
+                                   mean_len_join_sub$AGE==14|mean_len_join_sub$AGE==15),], aes(prevyr_prevage_F_scaled, mean_ann_length)) + geom_point() + 
+  facet_wrap(~AGE, ncol=5) +
+  geom_smooth(method="lm") + 
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) + 
+  ylab("") + xlab("") + theme_bw() +xlim(c(-2,4))+ #ylim(c(400,700))+ 
+  scale_colour_manual(values=c("black", "red")) +theme(legend.position = "none")
+
+
+ggdraw() +
+  draw_plot(wc1, 0, .6, 1, .33) +
+  draw_plot(wc2, 0, .3, 1, .33) +
+  draw_plot(wc3, 0, 0, 1, .33) 
 
 
 
@@ -244,43 +291,43 @@ names(mean_len_join)
 plottingsub <- mean_len_join[,c(3,10,49,53:55)]
 plottinglong <- plottingsub %>% pivot_longer(-c(YEAR, AGE, period, mean_ann_length), names_to = "covar", values_to = "scaled_value")
 
-plottinglong <- plottinglong[,plottinglong$period=="After 1987"]
+plottinglong <- plottinglong[which(plottinglong$period=="After 1987"),]
 
 b1 <- ggplot(plottinglong[which(plottinglong$AGE==1|
                                   plottinglong$AGE==2|
-                                  plottinglong$AGE==3),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar)) + 
+                                  plottinglong$AGE==3),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar), size=0.6) + 
   facet_wrap(~AGE, ncol=3) +
-  geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(100,500))+
+  geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(100,400))+
   ylab("") + xlab("") + scale_colour_manual(values=c("black", "dark green")) +
   theme(legend.position = "none")
 
 b2 <- ggplot(plottinglong[which(plottinglong$AGE==4|
                                   plottinglong$AGE==5|
-                                  plottinglong$AGE==6),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar)) + 
+                                  plottinglong$AGE==6),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar), size=0.6) + 
   facet_wrap(~AGE, ncol=3) +
-  geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(300,600))+
+  geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(300,550))+
   ylab("") + xlab("") + scale_colour_manual(values=c("black", "dark green")) +
   theme(legend.position = "none")
 
 b3 <- ggplot(plottinglong[which(plottinglong$AGE==7|
                                   plottinglong$AGE==8|
-                                  plottinglong$AGE==9),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar)) + 
+                                  plottinglong$AGE==9),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar), size=0.6) + 
   facet_wrap(~AGE, ncol=3) +
-  geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(400,700))+
+  geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(450,700))+
   ylab("") + xlab("") + scale_colour_manual(values=c("black", "dark green")) +
   theme(legend.position = "none")
 
 b4 <- ggplot(plottinglong[which(plottinglong$AGE==10|
                                   plottinglong$AGE==11|
-                                  plottinglong$AGE==12),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar)) + 
+                                  plottinglong$AGE==12),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar), size=0.6) + 
   facet_wrap(~AGE, ncol=3) +
-  geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(500,800))+
+  geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(500,750))+
   ylab("") + xlab("") + scale_colour_manual(values=c("black", "dark green")) +
   theme(legend.position = "none")
 
 b5 <- ggplot(plottinglong[which(plottinglong$AGE==13|
                                   plottinglong$AGE==14|
-                                  plottinglong$AGE==15),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar)) + 
+                                  plottinglong$AGE==15),], aes(scaled_value, mean_ann_length)) +  geom_point(aes(col=covar), size=0.6) + 
   facet_wrap(~AGE, ncol=3) +
   geom_smooth(aes(scaled_value, mean_ann_length, col=covar), method="lm") +theme_bw()+ xlim(c(-2,4))+ ylim(c(500,800))+
   ylab("") + xlab("") + scale_colour_manual(values=c("black", "dark green")) +
@@ -292,6 +339,13 @@ ggdraw() +
   draw_plot(b3, 0, .38, 1, .23) +
   draw_plot(b4, 0, .19, 1, .23) +
   draw_plot(b5, 0, 0, 1, .23)
+
+ggdraw() +
+  draw_plot(b1, 0, .76, 1, .25) + 
+  draw_plot(b2, 0, .57, 1, .255) +
+  draw_plot(b3, 0, .38, 1, .255) +
+  draw_plot(b4, 0, .19, 1, .255) +
+  draw_plot(b5, 0, 0, 1, .255)
 
 #GAMs w prev yr prev age AND mean parent F-----
 
@@ -1232,6 +1286,13 @@ back_dat$cohort <- cohort_median
 
 back_dat$covar <- namesv[3:10]
 
+#troubleshooting, maybe the latxlong is the issue
+#try age specific median lat long?
+
+coords_by_age <- datwparents %>% group_by(AGE) %>%
+  summarize(age_median_lat=median(LATITUDE, na.rm=TRUE),
+            age_median_long=median(LONGITUDE, na.rm = TRUE))
+
 #for each age
 age1pred <- predict.gam(lag1.bothF_REML$gam, newdata = back_dat, se.fit=TRUE)
 length(age1pred$fit)
@@ -1433,6 +1494,189 @@ p2
 #are error bars repeating?
 
 back_plot_dat[which(back_plot_dat$age==1 & back_plot_dat$covar=="south.sst.amj.scaled"),]
+
+
+#back predict again with age specific medians
+
+#for each age
+back_dat1 <- back_dat[,1:12]
+back_dat1$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==1]
+back_dat1$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==1]
+age1predspec <- predict.gam(lag1.bothF_REML$gam, newdata = back_dat1, se.fit=TRUE)
+length(age1predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat1$predicted_age1 <- age1predspec$fit
+back_dat1$pred_SE_age1 <- age1predspec$se.fit
+
+#
+back_dat2 <- back_dat[,1:12]
+back_dat2$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==2]
+back_dat2$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==2]
+
+age2predspec <- predict.gam(lag2.bothF_REML$gam, newdata = back_dat2, se.fit=TRUE)
+length(age2predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat2$predicted_age2 <- age2predspec$fit
+back_dat2$pred_SE_age2 <- age2predspec$se.fit
+
+#
+back_dat3 <- back_dat[,1:12]
+back_dat3$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==3]
+back_dat3$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==3]
+
+age3predspec <- predict.gam(lag3.bothF_REML$gam, newdata = back_dat3, se.fit=TRUE)
+length(age3predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat3$predicted_age3 <- age3predspec$fit
+back_dat3$pred_SE_age3 <- age3predspec$se.fit
+
+#
+back_dat4 <- back_dat[,1:12]
+back_dat4$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==4]
+back_dat4$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==4]
+
+age4predspec <- predict.gam(lag4.bothF_REML$gam, newdata = back_dat4, se.fit=TRUE)
+length(age4predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat4$predicted_age4 <- age4predspec$fit
+back_dat4$pred_SE_age4 <- age4predspec$se.fit
+
+#
+back_dat5 <- back_dat[,1:12]
+back_dat5$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==5]
+back_dat5$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==5]
+
+age5predspec <- predict.gam(lag5.bothF_REML$gam, newdata = back_dat5, se.fit=TRUE)
+length(age5predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat5$predicted_age5 <- age5predspec$fit
+back_dat5$pred_SE_age5 <- age5predspec$se.fit
+
+#
+back_dat6 <- back_dat[,1:12]
+back_dat6$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==6]
+back_dat6$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==6]
+
+age6predspec <- predict.gam(lag6.bothF_REML$gam, newdata = back_dat6, se.fit=TRUE)
+length(age6predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat6$predicted_age6 <- age6predspec$fit
+back_dat6$pred_SE_age6 <- age6predspec$se.fit
+
+#
+back_dat7 <- back_dat[,1:12]
+back_dat7$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==7]
+back_dat7$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==7]
+
+age7predspec <- predict.gam(lag7.bothF_REML$gam, newdata = back_dat7, se.fit=TRUE)
+length(age7predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat7$predicted_age7 <- age7pred$fit
+back_dat7$pred_SE_age7 <- age7pred$se.fit
+
+#
+back_dat8 <- back_dat[,1:12]
+back_dat8$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==8]
+back_dat8$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==8]
+
+age8predspec <- predict.gam(lag8.bothF_REML$gam, newdata = back_dat8, se.fit=TRUE)
+length(age8predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat8$predicted_age8 <- age8predspec$fit
+back_dat8$pred_SE_age8 <- age8predspec$se.fit
+
+#
+back_dat9 <- back_dat[,1:12]
+back_dat9$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==9]
+back_dat9$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==9]
+
+age9predspec <- predict.gam(lag9.bothF_REML$gam, newdata = back_dat9, se.fit=TRUE)
+length(age9predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat9$predicted_age9 <- age9predspec$fit
+back_dat9$pred_SE_age9 <- age9predspec$se.fit
+
+#
+back_dat10 <- back_dat[,1:12]
+back_dat10$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==10]
+back_dat10$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==10]
+
+age10predspec <- predict.gam(lag10.bothF_REML$gam, newdata = back_dat10, se.fit=TRUE)
+length(age10predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat10$predicted_age10 <- age10predspec$fit
+back_dat10$pred_SE_age10 <- age10predspec$se.fit
+
+#
+back_dat11 <- back_dat[,1:12]
+back_dat11$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==11]
+back_dat11$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==11]
+
+age11predspec <- predict.gam(lag11.bothF_REML$gam, newdata = back_dat11, se.fit=TRUE)
+length(age11predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat11$predicted_age11 <- age11predspec$fit
+back_dat11$pred_SE_age11 <- age11predspec$se.fit
+
+#
+back_dat12 <- back_dat[,1:12]
+back_dat12$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==12]
+back_dat12$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==12]
+
+age12predspec <- predict.gam(lag12.bothF_REML$gam, newdata = back_dat12, se.fit=TRUE)
+length(age12predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat12$predicted_age12 <- age12predspec$fit
+back_dat12$pred_SE_age12 <- age12predspec$se.fit
+
+#
+back_dat13 <- back_dat[,1:12]
+back_dat13$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==13]
+back_dat13$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==13]
+
+age13predspec <- predict.gam(lag13.bothF_REML$gam, newdata = back_dat13, se.fit=TRUE)
+length(age13predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat13$predicted_age13 <- age13predspec$fit
+back_dat13$pred_SE_age13 <- age13predspec$se.fit
+
+#
+back_dat14 <- back_dat[,1:12]
+back_dat14$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==14]
+back_dat14$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==14]
+
+age14predspec <- predict.gam(lag14.bothF_REML$gam, newdata = back_dat14, se.fit=TRUE)
+length(age14predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat14$predicted_age14 <- age14predspec$fit
+back_dat14$pred_SE_age14 <- age14predspec$se.fit
+
+#
+back_dat15 <- back_dat[,1:12]
+back_dat15$LONGITUDE <- coords_by_age$age_median_long[coords_by_age$AGE==15]
+back_dat15$LATITUDE <- coords_by_age$age_median_lat[coords_by_age$AGE==15]
+
+age15predspec <- predict.gam(lag15.bothF_REML$gam, newdata = back_dat15, se.fit=TRUE)
+length(age15predspec$fit)
+length(back_dat$LATITUDE) #same length
+
+back_dat15$predicted_age15 <- age15predspec$fit
+back_dat15$pred_SE_age15 <- age15predspec$se.fit
+
 
 
 
