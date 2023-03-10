@@ -62,7 +62,7 @@ w2means$growth_increment <- w2means$mean_annual_length_at_age - w2means$prev_len
 #all looks good, now match back to metadata
 
 
-metadat <- datwparents[,c(1:3, 10, 34:38, 49:53)] #select just cols w metadata, not individual data
+metadat <- datwparents[,c(3, 10, 34:38, 49:53)] #select just cols w metadata, not individual data
 metadat <- metadat[!duplicated(metadat),]
 
 w2means$YEAR <- as.factor(w2means$YEAR)
@@ -83,14 +83,14 @@ ggplot(meanjoin, aes(as.numeric(as.character(YEAR)), growth_increment, col=as.fa
 #age 2------
 mean2 <- meanjoin[which(meanjoin$AGE==2),]
 
-gi2 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi2 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                       mean_weight_parentF_scaled + 
                       prevyr_prevage_F_scaled +
                       pollock_survey_abun_mil_at_age_scaled +
                       apex_pred_biom_scaled + 
                       forage_fish_biom_scaled + 
                       pelagic_forager_biom_scaled,  REML=FALSE,  data=mean2 )
-gam.check(gi2) #not bad
+gam.check(gi2) #???
 summary(gi2) #
 summary(gi2) #
 plot(gi2)
@@ -101,7 +101,7 @@ plot(gi2)
 #age 3------
 mean3 <- meanjoin[which(meanjoin$AGE==3),]
 
-gi3 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi3 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                       mean_weight_parentF_scaled + 
                       prevyr_prevage_F_scaled +
                       pollock_survey_abun_mil_at_age_scaled +
@@ -118,7 +118,7 @@ plot(gi3)
 #age 4------
 mean4 <- meanjoin[which(meanjoin$AGE==4),]
 
-gi4 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi4 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                       mean_weight_parentF_scaled + 
                       prevyr_prevage_F_scaled +
                       pollock_survey_abun_mil_at_age_scaled +
@@ -137,7 +137,7 @@ plot(gi4)
 #age 5------
 mean5 <- meanjoin[which(meanjoin$AGE==5),]
 
-gi5 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi5 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                       mean_weight_parentF_scaled + 
                       prevyr_prevage_F_scaled +
                       pollock_survey_abun_mil_at_age_scaled +
@@ -155,7 +155,7 @@ plot(gi5)
 #age 6------
 mean6 <- meanjoin[which(meanjoin$AGE==6),]
 
-gi6 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi6 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                       mean_weight_parentF_scaled + 
                       prevyr_prevage_F_scaled +
                       pollock_survey_abun_mil_at_age_scaled +
@@ -175,7 +175,7 @@ plot(gi6)
 #age 7------
 mean7 <- meanjoin[which(meanjoin$AGE==7),]
 
-gi7 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi7 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                       mean_weight_parentF_scaled + 
                       prevyr_prevage_F_scaled +
                       pollock_survey_abun_mil_at_age_scaled +
@@ -191,7 +191,7 @@ plot(gi7)
 #age 8------
 mean8 <- meanjoin[which(meanjoin$AGE==8),]
 
-gi8 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi8 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                       mean_weight_parentF_scaled + 
                       prevyr_prevage_F_scaled +
                       pollock_survey_abun_mil_at_age_scaled +
@@ -209,7 +209,7 @@ plot(gi8)
 #age 9------
 mean9 <- meanjoin[which(meanjoin$AGE==9),]
 
-gi9 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi9 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                       mean_weight_parentF_scaled + 
                       prevyr_prevage_F_scaled +
                       pollock_survey_abun_mil_at_age_scaled +
@@ -229,7 +229,7 @@ plot(gi9)
 #age 10------
 mean10 <- meanjoin[which(meanjoin$AGE==10),]
 
-gi10 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi10 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                        mean_weight_parentF_scaled + 
                        prevyr_prevage_F_scaled +
                        pollock_survey_abun_mil_at_age_scaled +
@@ -247,7 +247,7 @@ plot(gi10)
 #age 11------
 mean11 <- meanjoin[which(meanjoin$AGE==11),]
 
-gi11 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi11 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                 mean_weight_parentF_scaled + 
                 prevyr_prevage_F_scaled +
                 pollock_survey_abun_mil_at_age_scaled +
@@ -265,7 +265,7 @@ plot(gi11)
 #age 12------
 mean12 <- meanjoin[which(meanjoin$AGE==12),]
 
-gi12 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi12 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                 mean_weight_parentF_scaled + 
                 prevyr_prevage_F_scaled +
                 pollock_survey_abun_mil_at_age_scaled +
@@ -284,7 +284,7 @@ plot(gi12)
 #age 13------
 mean13 <- meanjoin[which(meanjoin$AGE==13),]
 
-gi13 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi13 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                 mean_weight_parentF_scaled + 
                 prevyr_prevage_F_scaled +
                 pollock_survey_abun_mil_at_age_scaled +
@@ -304,7 +304,7 @@ plot(gi13)
 #age 14------
 mean14 <- meanjoin[which(meanjoin$AGE==14),]
 
-gi14 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi14 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                 mean_weight_parentF_scaled + 
                 prevyr_prevage_F_scaled +
                 pollock_survey_abun_mil_at_age_scaled +
@@ -325,7 +325,7 @@ plot(gi14$gam)
 #age 15------
 mean15 <- meanjoin[which(meanjoin$AGE==15),]
 
-gi15 <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi15 <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
                 mean_weight_parentF_scaled + 
                 prevyr_prevage_F_scaled +
                 pollock_survey_abun_mil_at_age_scaled +
@@ -344,7 +344,7 @@ plot(gi15$gam)
 
 #age 2------
 
-gi2reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi2reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
              mean_weight_parentF_scaled + 
              prevyr_prevage_F_scaled +
              pollock_survey_abun_mil_at_age_scaled +
@@ -361,7 +361,7 @@ plot(gi2reml)
 
 #age 3------
 
-gi3reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi3reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
              mean_weight_parentF_scaled + 
              prevyr_prevage_F_scaled +
              pollock_survey_abun_mil_at_age_scaled +
@@ -377,7 +377,7 @@ plot(gi3reml)
 
 #age 4------
 
-gi4reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi4reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
              mean_weight_parentF_scaled + 
              prevyr_prevage_F_scaled +
              pollock_survey_abun_mil_at_age_scaled +
@@ -395,7 +395,7 @@ plot(gi4reml)
 
 #age 5------
 
-gi5reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi5reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
              mean_weight_parentF_scaled + 
              prevyr_prevage_F_scaled +
              pollock_survey_abun_mil_at_age_scaled +
@@ -412,7 +412,7 @@ plot(gi5reml)
 
 #age 6------
 
-gi6reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi6reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
              mean_weight_parentF_scaled + 
              prevyr_prevage_F_scaled +
              pollock_survey_abun_mil_at_age_scaled +
@@ -431,7 +431,7 @@ plot(gi6reml)
 
 #age 7------
 
-gi7reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi7reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
              mean_weight_parentF_scaled + 
              prevyr_prevage_F_scaled +
              pollock_survey_abun_mil_at_age_scaled +
@@ -446,7 +446,7 @@ plot(gi7reml)
 
 #age 8------
 
-gi8reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi8reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
              mean_weight_parentF_scaled + 
              prevyr_prevage_F_scaled +
              pollock_survey_abun_mil_at_age_scaled +
@@ -463,7 +463,7 @@ plot(gi8reml)
 
 #age 9------
 
-gi9reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi9reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
              mean_weight_parentF_scaled + 
              prevyr_prevage_F_scaled +
              pollock_survey_abun_mil_at_age_scaled +
@@ -482,7 +482,7 @@ plot(gi9reml)
 
 #age 10------
 
-gi10reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi10reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
               mean_weight_parentF_scaled + 
               prevyr_prevage_F_scaled +
               pollock_survey_abun_mil_at_age_scaled +
@@ -499,7 +499,7 @@ plot(gi10reml)
 
 #age 11------
 
-gi11reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi11reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
               mean_weight_parentF_scaled + 
               prevyr_prevage_F_scaled +
               pollock_survey_abun_mil_at_age_scaled +
@@ -516,7 +516,7 @@ plot(gi11reml)
 
 #age 12------
 
-gi12reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi12reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
               mean_weight_parentF_scaled + 
               prevyr_prevage_F_scaled +
               pollock_survey_abun_mil_at_age_scaled +
@@ -534,7 +534,7 @@ plot(gi12reml)
 
 #age 13------
 
-gi13reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi13reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
               mean_weight_parentF_scaled + 
               prevyr_prevage_F_scaled +
               pollock_survey_abun_mil_at_age_scaled +
@@ -553,7 +553,7 @@ plot(gi13reml)
 
 #age 14------
 
-gi14reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi14reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
               mean_weight_parentF_scaled + 
               prevyr_prevage_F_scaled +
               pollock_survey_abun_mil_at_age_scaled +
@@ -573,7 +573,7 @@ plot(gi14reml$gam)
 
 #age 15------
 
-gi15reml <- gam(length_scaled ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
+gi15reml <- gam(growth_increment ~  s(south.sst.amj.scaled, k=4) + t2(LONGITUDE, LATITUDE) + s(julian_scaled, k = 4) +
               mean_weight_parentF_scaled + 
               prevyr_prevage_F_scaled +
               pollock_survey_abun_mil_at_age_scaled +
